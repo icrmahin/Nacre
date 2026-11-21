@@ -1,0 +1,702 @@
+{
+  "fonts": [
+    {
+      "id": "nacre-ui-icons",
+      "src": [
+        {
+          "path": "./nacre-ui-icons.woff2",
+          "format": "woff2"
+        }
+      ],
+      "weight": "normal",
+      "style": "normal",
+      "size": "100%"
+    }
+  ],
+  "iconDefinitions": {
+    "account": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "activate-breakpoints": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "add": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "arrow-down": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "arrow-left": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "arrow-right": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "arrow-up": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "beaker": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "bell": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "bell-dot": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "book": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "bracket": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "bug": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "call-incoming": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "call-outgoing": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "case-sensitive": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "check": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "chevron-down": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "chevron-left": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "chevron-right": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "chevron-up": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "circle-large-outline": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "clear-all": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "close": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "close-all": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "cloud-download": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "code": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "collapse-all": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "comment": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "comment-discussion": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "compare-changes": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "debug": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "debug-alt": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "debug-console": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "debug-continue": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "debug-disconnect": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "debug-pause": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "debug-restart": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "debug-restart-frame": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "debug-reverse-continue": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "debug-stackframe": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "debug-start": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "debug-step-back": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "debug-step-into": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "debug-step-out": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "debug-step-over": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "debug-stop": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "discard": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "edit": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "ellipsis": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "error": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "exclude": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "expand-all": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "explorer-view-icon": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "extensions": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "extensions-view-icon": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "eye": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "file-code": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "file-directory": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "files": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "filter": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "folder": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "gear": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "git-commit": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "gitlens-commit-horizontal": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "gitlens-gitlens": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "gitlens-graph": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "gitlens-next-commit": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "gitlens-prev-commit": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "go-to-file": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "gripper": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "heart": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "history": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "info": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "issues": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "keyboard": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "layout": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "lightbulb": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "link-external": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "list-flat": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "list-selection": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "list-tree": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "live-share": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "lock": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "new-file": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "new-folder": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "notifications-do-not-disturb": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "output": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "paintcan": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "pass": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "pass-filled": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "pencil": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "pin": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "pinned": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "play": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "play-all": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "plug": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "plus": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "preserve-case": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "preview": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "record-keys": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "refresh": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "regex": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "remote-explorer": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "remove": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "replace": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "replace-all": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "rocket": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "run": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "run-view-icon": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "search": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "search-save": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "search-stop": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "search-view-icon": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "selection": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "send": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "server": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "server-environment": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "server-process": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "settings": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "settings-gear": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "settings-view-bar-icon": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "shield": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "sort-precedence": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "source-control": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "source-control-view-icon": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "sparkle": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "split-horizontal": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "split-vertical": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "star": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "star-full": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "star-half": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "stop": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "symbol-class": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "sync": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "sync-ignored": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "terminal": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "tools": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "trash": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "triangle-down": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "triangle-left": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "triangle-right": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "triangle-up": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "unfold": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "warning": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "watch": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "whitespace": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "whole-word": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "window": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "auxiliarybar-maximize": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "chat-sparkle": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "code-review": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "diff-multiple": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "extension-activation-time": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "extensions-install-count": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "text-uppercase": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "debug-stackframe-dot": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "debug-alt-small": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "debug-line-by-line": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "debug-coverage": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "run-all": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "run-above": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "run-below": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "record": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "loading": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "toolbar-more": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "notebook-execute": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "notebook-execute-all": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "terminal-run": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "terminal-kill": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    },
+    "testing-run-icon": {
+      "fontCharacter": "",
+      "fontId": "nacre-ui-icons"
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "name": "nacre",
+  "displayName": "Nacre — Premium Dark Theme",
+  "description": "A premium near-black and graphite Visual Studio Code theme with vibrant, carefully tiered syntax highlighting, custom file icons and product UI icons.",
+  "version": "1.0.0",
+  "publisher": "icrmahin",
+  "author": "ICRMAHIN",
+  "icon": "nacre-theme-icon.png",
+  "main": "./extension.js",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "categories": [
+    "Themes"
+  ],
+  "keywords": [
+    "nacre",
+    "dark theme",
+    "near black",
+    "graphite",
+    "syntax highlighting",
+    "file icons",
+    "product icons",
+    "developer theme"
+  ],
+  "contributes": {
+    "themes": [
+      {
+        "label": "Nacre",
+        "uiTheme": "vs-dark",
+        "path": "./themes/nacre-color-theme.json"
+      }
+    ],
+    "iconThemes": [
+      {
+        "id": "nacre-file-icons",
+        "label": "Nacre File Icons",
+        "path": "./themes/nacre-file-icons.json"
+      }
+    ],
+    "productIconThemes": [
+      {
+        "id": "nacre-product-icons",
+        "label": "Nacre Product Icons",
+        "path": "./themes/nacre-product-icons.json"
+      }
+    ],
+    "configuration": {
+      "title": "Nacre",
+      "properties": {
+        "nacre.colorHighlight.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable inline highlighting for hex, RGB, RGBA, HSL and HSLA color values."
+        }
+      }
+    }
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/icrmahin/Nacre.git"
+  },
+  "homepage": "https://github.com/icrmahin/Nacre",
+  "bugs": {
+    "url": "https://github.com/icrmahin/Nacre/issues"
+  },
+  "scripts": {
+    "validate": "node scripts/validate.mjs"
+  }
+}
