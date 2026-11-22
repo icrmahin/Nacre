@@ -12,9 +12,12 @@ No runtime npm dependencies are declared by this extension. `extension.js` uses 
 
 ```bash
 npm run validate
+npm test
+node --check extension.js
+node --check kdeAccent.js
 ```
 
-The validation script checks manifest identity/version, JSON syntax, contribution file paths, SVG icon paths, product icon font paths, and that exactly one color theme is contributed. It also reports the number of icon definitions and mappings.
+The validation script checks manifest identity/version, JSON syntax, contribution file paths, SVG icon paths, product icon font paths, and that exactly one color theme is contributed. It also reports the number of icon definitions and mappings. The Node test suite covers KDE color parsing, Plasma session detection, and generated workbench colors.
 
 ## Package a VSIX
 

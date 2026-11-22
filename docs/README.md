@@ -2,6 +2,7 @@
 
 - [Architecture](ARCHITECTURE.md): extension structure and responsibilities.
 - [Color system](COLOR-SYSTEM.md): workbench surfaces and syntax token roles.
+- [KDE Plasma accent sync](KDE-ACCENT.md): dynamic accent detection, override behavior and limitations.
 - [Icon themes](ICON-THEMES.md): file/folder mappings and product icon font.
 - [Inline color highlighting](COLOR-HIGHLIGHTING.md): supported values and implementation behavior.
 - [Build and release](BUILD-AND-RELEASE.md): local validation and VSIX packaging.

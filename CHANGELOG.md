@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Added configurable KDE Plasma accent synchronization for Nacre workbench UI colors, enabled by default on KDE Linux sessions.
+- Kept the editor syntax palette, icon themes, and bundled assets unchanged.
+
 ## 1.0.0 — Main release
 
 - Established Nacre as the single color theme in this release.

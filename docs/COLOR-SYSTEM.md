@@ -36,3 +36,9 @@ The palette draws on the readability and role separation found in GitHub-style d
 3. Avoid assigning multiple unrelated token roles the same high-saturation color.
 4. Run `npm run validate`.
 5. Test representative TypeScript/JavaScript, JSX/TSX, JSON, HTML, CSS, Python, and Markdown files in VS Code.
+
+## KDE Plasma adaptive accent
+
+Nacre's default `#121212` editor and syntax palette stay fixed. When KDE accent sync is enabled, the extension derives a restrained set of UI colors from the current Plasma accent: graphite surfaces receive a small hue tint; active selections, focus borders, tabs, links, badges and primary buttons receive the accent itself or a contrast-adjusted derivative. Error, warning, success, diff and terminal ANSI colors are intentionally left alone.
+
+The runtime overrides are scoped to the `Nacre` theme via VS Code's `[Nacre]` `workbench.colorCustomizations` entry. This keeps the adaptation from affecting other themes.

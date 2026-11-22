@@ -77,6 +77,14 @@ The theme defines TextMate scopes for common language constructs and several lan
 
 A single maintained color theme. The previous experimental color variants are not included in this release.
 
+### KDE Plasma adaptive workbench accent
+
+On Linux KDE sessions, Nacre can follow the active Plasma accent color, including the wallpaper-derived accent when Plasma exposes it through the desktop appearance portal. It gently tints graphite workbench surfaces and applies the accent to selections, active tabs, focus borders, links, badges and primary buttons. The `#121212` editor canvas and all syntax token colors remain Nacre's own.
+
+The integration is enabled by default and can be disabled with `nacre.kdeAccent.enable`. It uses the KDE appearance portal (`gdbus`) when available and falls back to the `~/.config/kdeglobals` accent/selection entries. The extension stores theme-scoped `[Nacre]` color customizations in VS Code's user settings while active, then restores the previous Nacre-scoped values when the feature is disabled or the extension deactivates.
+
+See [`docs/KDE-ACCENT.md`](docs/KDE-ACCENT.md) for implementation details and limitations.
+
 ### Nacre File Icons
 
 A file and folder icon theme with mappings for common file extensions, exact filenames, language IDs, and named folders. Its source mapping is [`themes/nacre-file-icons.json`](themes/nacre-file-icons.json); SVG assets are under [`icons/files/`](icons/files/) and [`icons/folders/`](icons/folders/).
@@ -117,12 +125,14 @@ Set it to `false` to disable inline color decorations.
 ├── media/                          # preview and extension icon
 ├── releases/                       # VSIX, source archive and release bundle
 ├── scripts/validate.mjs            # local package/asset validator
+├── tests/kdeAccent.test.js          # KDE adapter unit tests
 ├── themes/
 │   ├── nacre-color-theme.json      # workbench and syntax colors
 │   ├── nacre-file-icons.json       # file/folder icon mappings
 │   ├── nacre-product-icons.json    # product icon glyph map
 │   └── nacre-ui-icons.woff2        # bundled product icon font
-├── extension.js                    # inline color-value decorations
+├── extension.js                    # extension lifecycle and feature coordination
+├── kdeAccent.js                    # KDE accent detection and UI color derivation
 ├── package.json                    # VS Code extension manifest
 ├── CHANGELOG.md
 └── LICENSE.txt

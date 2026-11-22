@@ -25,7 +25,7 @@ Only one color theme is declared in the `contributes.themes` array.
 
 ## Runtime extension code
 
-`extension.js` implements color-value highlighting. It registers editor/document/configuration listeners, finds supported color expressions, parses them into RGBA values, calculates a contrasting text color, and applies VS Code text editor decorations.
+`extension.js` implements two runtime features. It retains the existing inline color-value highlighter and coordinates KDE accent synchronization when Nacre is the active theme. `kdeAccent.js` reads the current accent from the freedesktop appearance portal, falls back to KDE's `kdeglobals` file, watches for palette changes, and derives theme-scoped workbench color overrides. The overrides are written to `workbench.colorCustomizations` under `[Nacre]`; syntax token rules are not changed.
 
 ## Validation
 

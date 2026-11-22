@@ -19,5 +19,9 @@ jobs:
           node-version: 22
       - name: Validate extension metadata and assets
         run: npm run validate
+      - name: Run unit tests
+        run: npm test
       - name: Check extension JavaScript syntax
-        run: node --check extension.js
+        run: |
+          node --check extension.js
+          node --check kdeAccent.js
