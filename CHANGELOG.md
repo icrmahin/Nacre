@@ -1,9 +1,10 @@
 # Changelog
 
-## Unreleased
+## 1.0.1 — KDE Plasma accent integration
 
 - Added configurable KDE Plasma accent synchronization for Nacre workbench UI colors, enabled by default on KDE Linux sessions.
-- Kept the editor syntax palette, icon themes, and bundled assets unchanged.
+- Added portal-based accent detection with a `kdeglobals` fallback and automatic palette-change handling.
+- Kept the editor canvas, syntax palette, icon themes, and bundled assets unchanged.
 
 ## 1.0.0 — Main release
 

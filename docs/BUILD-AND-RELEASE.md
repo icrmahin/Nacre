@@ -24,10 +24,10 @@ The validation script checks manifest identity/version, JSON syntax, contributio
 From the repository root:
 
 ```bash
-npx --yes @vscode/vsce package --out ./releases/icrmahin.nacre-1.0.0.vsix
+npx --yes @vscode/vsce package --out ./releases/icrmahin.nacre-1.0.1.vsix
 ```
 
-The output path can be changed for local builds. Keep the `package.json` version aligned with the intended release; do not overwrite an existing release artifact without intentionally creating a new release.
+The output path can be changed for local builds. Keep the `package.json` version aligned with the intended release. The GitHub Actions release workflow builds the VSIX from the tagged source and attaches it to the matching GitHub Release.
 
 ## Local installation
 
@@ -48,4 +48,4 @@ Then select `Nacre`, `Nacre File Icons`, and `Nacre Product Icons` separately th
 7. Verify syntax in several languages and confirm file/folder/product icons render.
 8. Generate SHA-256 checksums and attach the VSIX and source archive to the release.
 
-The supplied 1.0.0 artifact passed static packaging checks. Live VS Code installation and screenshot-based rendering validation were not performed as part of that check.
+The 1.0.0 artifact is retained as a historical release. The 1.0.1 package is generated from the current source by GitHub Actions; perform a clean-profile installation and live KDE Plasma test before marketplace publication.

@@ -23,8 +23,8 @@ if (pkg) {
   else pass('Package name is nacre');
   if (pkg.publisher !== 'icrmahin') fail(`Expected publisher "icrmahin", found "${pkg.publisher}"`);
   else pass('Publisher is icrmahin');
-  if (pkg.version !== '1.0.0') fail(`Expected release version 1.0.0, found "${pkg.version}"`);
-  else pass('Version is 1.0.0');
+  if (pkg.version !== '1.0.1') fail(`Expected release version 1.0.1, found "${pkg.version}"`);
+  else pass('Version is 1.0.1');
 
   const themes = pkg.contributes?.themes ?? [];
   if (themes.length !== 1 || themes[0]?.label !== 'Nacre') {

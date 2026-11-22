@@ -1,0 +1,73 @@
+name: Build and publish Nacre VSIX
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version (without v)"
+        required: true
+        default: "1.0.1"
+        type: string
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate source and tests
+        run: |
+          npm run validate
+          npm test
+          node --check extension.js
+          node --check kdeAccent.js
+
+      - name: Verify release version
+        id: version
+        shell: bash
+        run: |
+          VERSION="$(node -p "require('./package.json').version")"
+          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+            REQUESTED_VERSION="${{ inputs.version }}"
+            if [[ ! "$REQUESTED_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "Invalid version: $REQUESTED_VERSION"
+              exit 1
+            fi
+            if [[ "$VERSION" != "$REQUESTED_VERSION" ]]; then
+              echo "package.json is $VERSION but requested release is $REQUESTED_VERSION"
+              exit 1
+            fi
+            TAG="v$REQUESTED_VERSION"
+          else
+            TAG="${GITHUB_REF_NAME}"
+            TAG_VERSION="${TAG#v}"
+            if [[ "$VERSION" != "$TAG_VERSION" ]]; then
+              echo "package.json is $VERSION but tag is $TAG"
+              exit 1
+            fi
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Package VSIX
+        run: npx --yes @vscode/vsce package --out "./icrmahin.nacre-${{ steps.version.outputs.version }}.vsix"
+
+      - name: Create GitHub Release and attach VSIX
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ steps.version.outputs.tag }}" "./icrmahin.nacre-${{ steps.version.outputs.version }}.vsix" \
+            --title "Nacre ${{ steps.version.outputs.version }}" \
+            --generate-notes
