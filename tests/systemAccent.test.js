@@ -51,9 +51,17 @@ test('derives a deep neutral editor with restrained accent-tinted chrome', () =>
 });
 
 test('preserves readable text and button contrast for dark desktop accents', () => {
-    const colors = buildNacreCustomizations('#000000');
-    assert.ok(contrast(colors['textLink.foreground'], colors['sideBar.background']) >= 4.5);
-    assert.ok(contrast(colors['button.foreground'], colors['button.background']) >= 4.5);
+    for (const accent of ['#000000', '#121212', '#252525', '#343434']) {
+        const colors = buildNacreCustomizations(accent);
+        assert.ok(
+            contrast(colors['textLink.foreground'], colors['sideBar.background']) >= 4.5,
+            `link contrast failed for ${accent}`,
+        );
+        assert.ok(
+            contrast(colors['button.foreground'], colors['button.background']) >= 4.5,
+            `button contrast failed for ${accent}`,
+        );
+    }
 });
 
 test('rejects malformed desktop colors', () => {
