@@ -26,8 +26,8 @@ const LAST_SYSTEM_COLORS_KEY = 'nacre.systemAccent.lastAppliedColors';
 const LAST_TEXT_MATE_RULES_KEY = 'nacre.systemAccent.lastAppliedTextMateRules';
 const LAST_SEMANTIC_RULES_KEY = 'nacre.systemAccent.lastAppliedSemanticRules';
 const NACRE_THEME_SCOPE = '[Nacre]';
-const TEXT_MATE_CUSTOMIZATIONS_SETTING = 'editor.tokenColorCustomizations';
-const SEMANTIC_CUSTOMIZATIONS_SETTING = 'editor.semanticTokenColorCustomizations';
+const TEXT_MATE_CUSTOMIZATIONS_SETTING = 'tokenColorCustomizations';
+const SEMANTIC_CUSTOMIZATIONS_SETTING = 'semanticTokenColorCustomizations';
 
 const MAX_FILE_SIZE = 500000;        // 500 KB – skip very large files
 const MAX_UNIQUE_COLORS = 500;       // max decoration types per update
@@ -206,7 +206,7 @@ function isPlainObject(value) {
 }
 
 function readGlobalThemeSetting(settingId) {
-    const configuration = vscode.workspace.getConfiguration();
+    const configuration = vscode.workspace.getConfiguration('editor');
     const inspected = configuration.inspect(settingId);
     const globalValue = isPlainObject(inspected?.globalValue)
         ? inspected.globalValue
