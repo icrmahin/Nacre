@@ -1,12 +1,13 @@
 # Changelog
 
-## Unreleased
+## 1.0.2 — Adaptive system accent and syntax tinting
 
-- Added subtle desktop-accent tinting for TextMate and semantic syntax colors using a restrained 20% blend, visible without replacing the original token palette.
-- Kept the existing Nacre token hierarchy and near-black editor canvas intact.
+- Added GNOME and KDE desktop accent synchronization for Nacre workbench colors.
+- Added wallpaper-responsive tinting for TextMate and semantic syntax colors using a visible 20% blend.
+- Preserved the original syntax hierarchy and a minimum 4.5:1 contrast ratio against the editor background.
 - Extended the existing system-accent setting to control both workbench and syntax tinting.
-- Added tests for color blending, readability, user override preservation and restoration.
-
+- Added diagnostics for generated syntax colors and workspace overrides.
+- Added tests for accent changes, readability, user override preservation and restoration.
 
 ## 1.0.1 — KDE Plasma accent integration
 
