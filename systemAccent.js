@@ -154,10 +154,18 @@ async function readGnomeAccent() {
 
 async function readSystemAccentColor(environment = process.env) {
     if (process.platform !== 'linux') return null;
+
+    // On GNOME, prefer the live GSettings value. The portal can be used by other
+    // desktops and remains a fallback when the GNOME key is unavailable.
+    if (isGnomeSession(environment)) {
+        const gnomeAccent = await readGnomeAccent();
+        if (gnomeAccent) return gnomeAccent;
+    }
+
     const portalAccent = await readPortalAccent();
     if (portalAccent) return portalAccent;
+
     if (isKdeSession(environment)) return readKdeConfigAccent();
-    if (isGnomeSession(environment)) return readGnomeAccent();
     return null;
 }
 
