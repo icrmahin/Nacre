@@ -10,7 +10,7 @@ When Nacre is the active VS Code color theme on Linux, the extension can use the
 }
 ```
 
-The editor canvas stays near-black (`#0B0C0E`). Existing TextMate token colors and semantic token colors receive a restrained 10% blend toward the desktop accent. The original color roles and visual hierarchy remain intact. Terminal ANSI colors, file icons, product icons and their bundled artwork are not recolored.
+The editor canvas stays near-black (`#0B0C0E`). Existing TextMate token colors and semantic token colors receive a visible but restrained 20% blend toward the desktop accent. The original color roles and visual hierarchy remain intact. Terminal ANSI colors, file icons, product icons and their bundled artwork are not recolored.
 
 ## Accent sources
 
