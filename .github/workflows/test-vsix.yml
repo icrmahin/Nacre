@@ -6,6 +6,9 @@ on:
     branches:
       - feat/nacre-system-accent-darkness
       - feat/nacre-accent-adaptive-syntax
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: read
