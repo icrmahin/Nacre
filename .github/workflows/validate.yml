@@ -25,3 +25,4 @@ jobs:
         run: |
           node --check extension.js
           node --check systemAccent.js
+          node --check syntaxAccent.js
