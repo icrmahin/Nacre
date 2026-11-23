@@ -1,0 +1,54 @@
+name: Build Nacre Test VSIX (No Release)
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feat/nacre-system-accent-darkness
+
+permissions:
+  contents: read
+
+jobs:
+  build-test-vsix:
+    name: Validate and package test VSIX
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out selected branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate extension metadata and assets
+        run: npm run validate
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Check extension JavaScript syntax
+        shell: bash
+        run: |
+          node --check extension.js
+          if [[ -f systemAccent.js ]]; then node --check systemAccent.js; fi
+          if [[ -f kdeAccent.js ]]; then node --check kdeAccent.js; fi
+
+      - name: Package VSIX for local testing
+        shell: bash
+        run: |
+          mkdir -p dist
+          VERSION="$(node -p "require('./package.json').version")"
+          SHORT_SHA="${GITHUB_SHA::7}"
+          npx --yes @vscode/vsce package --out "dist/icrmahin.nacre-${VERSION}-test-${SHORT_SHA}.vsix"
+
+      - name: Upload test VSIX
+        uses: actions/upload-artifact@v4
+        with:
+          name: nacre-test-vsix-${{ github.run_number }}
+          path: dist/*.vsix
+          if-no-files-found: error
+          retention-days: 14
