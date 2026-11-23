@@ -120,7 +120,7 @@ async function startSystemAccentSync(context) {
         .get('enable', true);
 
     if (process.platform !== 'linux' || !enabled) {
-        await restoreKdeCustomizations(context);
+        await restoreSystemCustomizations(context);
         return;
     }
 
@@ -139,14 +139,14 @@ async function refreshSystemAccent(context, generation) {
     const accent = await readSystemAccentColor();
     if (generation !== systemAccentGeneration || !isNacreActive()) return;
     if (!accent) {
-        await restoreKdeCustomizations(context);
+        await restoreSystemCustomizations(context);
         return;
     }
 
-    await applyKdeCustomizations(context, accent);
+    await applySystemCustomizations(context, accent);
 }
 
-async function applyKdeCustomizations(context, accent) {
+async function applySystemCustomizations(context, accent) {
     const colors = buildNacreCustomizations(accent);
     if (!Object.keys(colors).length) return;
 
@@ -187,7 +187,7 @@ async function applyKdeCustomizations(context, accent) {
     await context.globalState.update(LAST_SYSTEM_COLORS_KEY, colors);
 }
 
-async function restoreKdeCustomizations(context) {
+async function restoreSystemCustomizations(context) {
     const original = context.globalState.get(ORIGINAL_SYSTEM_COLORS_KEY);
     const lastApplied = context.globalState.get(LAST_SYSTEM_COLORS_KEY);
     if (!original || !lastApplied) return;
@@ -227,7 +227,7 @@ async function restoreKdeCustomizations(context) {
 
 async function stopSystemAccentSync(context) {
     stopSystemAccentWatcher();
-    await restoreKdeCustomizations(context);
+    await restoreSystemCustomizations(context);
 }
 
 // ── Deactivation ───────────────────────────────────────────────────────────
@@ -238,7 +238,7 @@ async function deactivate() {
     editorTimeouts.clear();
 
     if (extensionContext) {
-        await restoreKdeCustomizations(extensionContext);
+        await restoreSystemCustomizations(extensionContext);
         extensionContext = undefined;
     }
 }
