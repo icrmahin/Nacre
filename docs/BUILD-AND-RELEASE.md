@@ -1,51 +1,54 @@
-# Build and release
+# Build, test and release
 
 ## Requirements
 
-- Node.js (current LTS recommended)
+- Node.js 22 or later
 - npm through the Node.js installation
 - `@vscode/vsce` (invoked with `npx`)
 
-No runtime npm dependencies are declared by this extension. `extension.js` uses the VS Code extension API.
+The extension has no runtime npm dependencies. It uses the VS Code extension API and Node.js built-ins.
 
-## Validate source
+## Validate locally
+
+Run the same core checks used by GitHub Actions:
 
 ```bash
 npm run validate
 npm test
 node --check extension.js
-node --check kdeAccent.js
+node --check systemAccent.js
 ```
 
-The validation script checks manifest identity/version, JSON syntax, contribution file paths, SVG icon paths, product icon font paths, and that exactly one color theme is contributed. It also reports the number of icon definitions and mappings. The Node test suite covers KDE color parsing, Plasma session detection, and generated workbench colors.
+Validation checks package metadata, theme registrations, JSON, icon SVG paths, product-icon font references and the single-color-theme constraint. Unit tests cover GNOME/KDE detection, accent parsing, path resolution, palette generation and contrast calculations.
 
-## Package a VSIX
-
-From the repository root:
+## Build a local VSIX
 
 ```bash
-npx --yes @vscode/vsce package --out ./releases/icrmahin.nacre-1.0.1.vsix
+npx --yes @vscode/vsce package --out ./icrmahin.nacre-test.vsix
 ```
 
-The output path can be changed for local builds. Keep the `package.json` version aligned with the intended release. The GitHub Actions release workflow builds the VSIX from the tagged source and attaches it to the matching GitHub Release.
-
-## Local installation
+Install it:
 
 ```bash
-code --install-extension ./releases/icrmahin.nacre-1.0.0.vsix
+code --install-extension ./icrmahin.nacre-test.vsix
 ```
 
-Then select `Nacre`, `Nacre File Icons`, and `Nacre Product Icons` separately through the Command Palette.
+Alternatively, in VS Code open Extensions, select the `...` menu, choose **Install from VSIX...**, then select the package.
 
-## Release checklist
+## Build a test VSIX on GitHub without publishing
 
-1. Update `CHANGELOG.md`.
-2. Confirm theme contributions and paths in `package.json`.
-3. Run `npm run validate`.
-4. Build the VSIX with `vsce`.
-5. Verify the VSIX archive and inspect `extension/package.json` and `extension.vsixmanifest`.
-6. Install the package into a clean VS Code profile and test the three theme selectors.
-7. Verify syntax in several languages and confirm file/folder/product icons render.
-8. Generate SHA-256 checksums and attach the VSIX and source archive to the release.
+Use **Actions → Build Nacre Test VSIX (No Release) → Run workflow**. Select the development branch `feat/nacre-system-accent-darkness` in the branch selector and start the workflow.
 
-The 1.0.0 artifact is retained as a historical release. The 1.0.1 package is generated from the current source by GitHub Actions; perform a clean-profile installation and live KDE Plasma test before marketplace publication.
+The workflow runs validation and tests, packages the selected branch, and uploads a ZIP artifact containing the VSIX. Download it from the completed run's **Artifacts** section and extract the `.vsix`. The artifact expires after 14 days. This workflow does not create a GitHub Release, push a tag, or publish to the Marketplace.
+
+## Official release
+
+The official release workflow is tag-only. It cannot be started with the manual **Run workflow** button. After the implementation has passed local GNOME/KDE testing and the release has been approved:
+
+1. Update `CHANGELOG.md` and the package version.
+2. Run the local validation and test commands.
+3. Merge the approved changes into `main`.
+4. Create and push a matching version tag such as `v1.1.0`.
+5. The release workflow validates that the tag matches `package.json`, packages the VSIX and attaches it to a GitHub Release.
+
+A successful test-artifact build is not an official release and does not publish to the Visual Studio Marketplace.

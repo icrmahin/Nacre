@@ -1,21 +1,20 @@
 const vscode = require('vscode');
 const {
     buildNacreCustomizations,
-    isKdeSession,
-    readKdeAccentColor,
-    watchKdeAccentColor,
-} = require('./kdeAccent');
+    readSystemAccentColor,
+    watchSystemAccentColor,
+} = require('./systemAccent');
 
 // ── State ──────────────────────────────────────────────────────────────────
 let decorationTypeCache = new Map(); // "bgColor|fgColor" → TextEditorDecorationType
 let editorTimeouts = new Map();      // editor URI → timeout id
 let isEnabled = true;
 let extensionContext;
-let kdeAccentWatcher;
-let kdeSyncGeneration = 0;
+let systemAccentWatcher;
+let systemAccentGeneration = 0;
 
-const ORIGINAL_KDE_COLORS_KEY = 'nacre.kdeAccent.originalScopedColors';
-const LAST_KDE_COLORS_KEY = 'nacre.kdeAccent.lastAppliedColors';
+const ORIGINAL_SYSTEM_COLORS_KEY = 'nacre.systemAccent.originalScopedColors';
+const LAST_SYSTEM_COLORS_KEY = 'nacre.systemAccent.lastAppliedColors';
 
 const MAX_FILE_SIZE = 500000;        // 500 KB – skip very large files
 const MAX_UNIQUE_COLORS = 500;       // max decoration types per update
@@ -77,14 +76,14 @@ function activate(context) {
                 }
             }
 
-            if (event.affectsConfiguration('nacre.kdeAccent.enable')) {
+            if (event.affectsConfiguration('nacre.systemAccent.enable')) {
                 const enabled = vscode.workspace
-                    .getConfiguration('nacre.kdeAccent')
+                    .getConfiguration('nacre.systemAccent')
                     .get('enable', true);
                 if (enabled) {
-                    void startKdeAccentSync(context);
+                    void startSystemAccentSync(context);
                 } else {
-                    void stopKdeAccentSync(context);
+                    void stopSystemAccentSync(context);
                 }
             }
         })
@@ -93,61 +92,61 @@ function activate(context) {
     // Theme-specific overrides are only useful while Nacre is the active color theme.
     context.subscriptions.push(
         vscode.window.onDidChangeActiveColorTheme(() => {
-            void refreshKdeAccent(context, kdeSyncGeneration);
+            void refreshSystemAccent(context, systemAccentGeneration);
         })
     );
 
-    void startKdeAccentSync(context);
+    void startSystemAccentSync(context);
 }
 
-// ── KDE Plasma accent integration ──────────────────────────────────────────
+// ── desktop accent integration ──────────────────────────────────────────
 function isNacreActive() {
     return vscode.workspace.getConfiguration('workbench').get('colorTheme') === 'Nacre';
 }
 
-function stopKdeAccentWatcher() {
-    kdeSyncGeneration += 1;
-    if (kdeAccentWatcher) {
-        kdeAccentWatcher();
-        kdeAccentWatcher = undefined;
+function stopSystemAccentWatcher() {
+    systemAccentGeneration += 1;
+    if (systemAccentWatcher) {
+        systemAccentWatcher();
+        systemAccentWatcher = undefined;
     }
 }
 
-async function startKdeAccentSync(context) {
-    stopKdeAccentWatcher();
+async function startSystemAccentSync(context) {
+    stopSystemAccentWatcher();
 
     const enabled = vscode.workspace
-        .getConfiguration('nacre.kdeAccent')
+        .getConfiguration('nacre.systemAccent')
         .get('enable', true);
 
-    if (process.platform !== 'linux' || !enabled || !isKdeSession()) {
-        await restoreKdeCustomizations(context);
+    if (process.platform !== 'linux' || !enabled) {
+        await restoreSystemCustomizations(context);
         return;
     }
 
-    const generation = kdeSyncGeneration;
-    kdeAccentWatcher = watchKdeAccentColor(() => {
-        void refreshKdeAccent(context, generation);
+    const generation = systemAccentGeneration;
+    systemAccentWatcher = watchSystemAccentColor(() => {
+        void refreshSystemAccent(context, generation);
     });
-    await refreshKdeAccent(context, generation);
+    await refreshSystemAccent(context, generation);
 }
 
-async function refreshKdeAccent(context, generation) {
-    if (generation !== kdeSyncGeneration || process.platform !== 'linux' || !isKdeSession()) return;
-    if (!vscode.workspace.getConfiguration('nacre.kdeAccent').get('enable', true)) return;
+async function refreshSystemAccent(context, generation) {
+    if (generation !== systemAccentGeneration || process.platform !== 'linux') return;
+    if (!vscode.workspace.getConfiguration('nacre.systemAccent').get('enable', true)) return;
     if (!isNacreActive()) return;
 
-    const accent = await readKdeAccentColor();
-    if (generation !== kdeSyncGeneration || !isNacreActive()) return;
+    const accent = await readSystemAccentColor();
+    if (generation !== systemAccentGeneration || !isNacreActive()) return;
     if (!accent) {
-        await restoreKdeCustomizations(context);
+        await restoreSystemCustomizations(context);
         return;
     }
 
-    await applyKdeCustomizations(context, accent);
+    await applySystemCustomizations(context, accent);
 }
 
-async function applyKdeCustomizations(context, accent) {
+async function applySystemCustomizations(context, accent) {
     const colors = buildNacreCustomizations(accent);
     if (!Object.keys(colors).length) return;
 
@@ -158,7 +157,7 @@ async function applyKdeCustomizations(context, accent) {
         : {};
     const themeScope = '[Nacre]';
 
-    let original = context.globalState.get(ORIGINAL_KDE_COLORS_KEY);
+    let original = context.globalState.get(ORIGINAL_SYSTEM_COLORS_KEY);
     if (!original) {
         const hadScope = Object.prototype.hasOwnProperty.call(globalColors, themeScope);
         original = {
@@ -167,7 +166,7 @@ async function applyKdeCustomizations(context, accent) {
                 ? globalColors[themeScope]
                 : {},
         };
-        await context.globalState.update(ORIGINAL_KDE_COLORS_KEY, original);
+        await context.globalState.update(ORIGINAL_SYSTEM_COLORS_KEY, original);
     }
 
     const nextGlobalColors = {
@@ -185,12 +184,12 @@ async function applyKdeCustomizations(context, accent) {
             vscode.ConfigurationTarget.Global,
         );
     }
-    await context.globalState.update(LAST_KDE_COLORS_KEY, colors);
+    await context.globalState.update(LAST_SYSTEM_COLORS_KEY, colors);
 }
 
-async function restoreKdeCustomizations(context) {
-    const original = context.globalState.get(ORIGINAL_KDE_COLORS_KEY);
-    const lastApplied = context.globalState.get(LAST_KDE_COLORS_KEY);
+async function restoreSystemCustomizations(context) {
+    const original = context.globalState.get(ORIGINAL_SYSTEM_COLORS_KEY);
+    const lastApplied = context.globalState.get(LAST_SYSTEM_COLORS_KEY);
     if (!original || !lastApplied) return;
 
     const workbench = vscode.workspace.getConfiguration('workbench');
@@ -222,24 +221,24 @@ async function restoreKdeCustomizations(context) {
         nextGlobalColors,
         vscode.ConfigurationTarget.Global,
     );
-    await context.globalState.update(ORIGINAL_KDE_COLORS_KEY, undefined);
-    await context.globalState.update(LAST_KDE_COLORS_KEY, undefined);
+    await context.globalState.update(ORIGINAL_SYSTEM_COLORS_KEY, undefined);
+    await context.globalState.update(LAST_SYSTEM_COLORS_KEY, undefined);
 }
 
-async function stopKdeAccentSync(context) {
-    stopKdeAccentWatcher();
-    await restoreKdeCustomizations(context);
+async function stopSystemAccentSync(context) {
+    stopSystemAccentWatcher();
+    await restoreSystemCustomizations(context);
 }
 
 // ── Deactivation ───────────────────────────────────────────────────────────
 async function deactivate() {
-    stopKdeAccentWatcher();
+    stopSystemAccentWatcher();
     disposeAllDecorations();
     for (const id of editorTimeouts.values()) clearTimeout(id);
     editorTimeouts.clear();
 
     if (extensionContext) {
-        await restoreKdeCustomizations(extensionContext);
+        await restoreSystemCustomizations(extensionContext);
         extensionContext = undefined;
     }
 }

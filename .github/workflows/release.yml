@@ -25,7 +25,7 @@ jobs:
           npm run validate
           npm test
           node --check extension.js
-          node --check kdeAccent.js
+          node --check systemAccent.js
 
       - name: Verify tag matches package version
         id: version

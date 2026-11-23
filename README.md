@@ -2,7 +2,7 @@
 
 **A premium dark workspace by [icrmahin](https://github.com/icrmahin).**
 
-Nacre pairs a deep `#121212` editor with restrained `#242527` graphite workspace surfaces. Its syntax palette is designed around a clear visual hierarchy: important language structure is easy to scan, related token roles stay coherent, and accents remain vivid without turning the editor into a rainbow.
+Nacre pairs a near-black `#0B0C0E` editor with restrained `#111214` graphite workspace surfaces and slightly raised `#17191C` panels. Its syntax palette is designed around a clear visual hierarchy: important language structure is easy to scan, related token roles stay coherent, and accents remain vivid without turning the editor into a rainbow.
 
 ![Nacre editor preview](media/nacre-preview.png)
 
@@ -47,9 +47,9 @@ The color, file-icon, and product-icon themes are independent VS Code contributi
 
 | Surface | Color | Intent |
 | --- | --- | --- |
-| Editor | `#121212` | Deep neutral black without a blue or olive cast |
-| Main workbench surfaces | `#242527` | Graphite separation for sidebars, panels, title/status chrome and widgets |
-| Selection | `#34465D` | Restrained blue-gray selection contrast |
+| Editor | `#0B0C0E` | Near-black neutral canvas |
+| Main workbench surfaces | `#111214` | Deep graphite separation for sidebars, panels and chrome |
+| Raised surfaces | `#17191C` | Subtle separation for menus, widgets and elevated panels |
 | Primary text | `#E6EDF3` | Cool, readable near-white |
 
 The full workbench color map lives in [`themes/nacre-color-theme.json`](themes/nacre-color-theme.json).
@@ -77,13 +77,11 @@ The theme defines TextMate scopes for common language constructs and several lan
 
 A single maintained color theme. The previous experimental color variants are not included in this release.
 
-### KDE Plasma adaptive workbench accent
+### GNOME and KDE system accent integration
 
-On Linux KDE sessions, Nacre can follow the active Plasma accent color, including the wallpaper-derived accent when Plasma exposes it through the desktop appearance portal. It gently tints graphite workbench surfaces and applies the accent to selections, active tabs, focus borders, links, badges and primary buttons. The `#121212` editor canvas and all syntax token colors remain Nacre's own.
+On Linux, Nacre can automatically follow the desktop accent exposed by GNOME, KDE Plasma or a compatible Freedesktop appearance portal. GNOME 47+ uses its GSettings accent preference, while KDE prefers the appearance portal and falls back to `kdeglobals`. The integration gently tints workbench surfaces and accent states; the `#0B0C0E` editor canvas and syntax palette remain unchanged. It is enabled by default and can be disabled with `nacre.systemAccent.enable`.
 
-The integration is enabled by default and can be disabled with `nacre.kdeAccent.enable`. It uses the KDE appearance portal (`gdbus`) when available and falls back to the `~/.config/kdeglobals` accent/selection entries. The extension stores theme-scoped `[Nacre]` color customizations in VS Code's user settings while active, then restores the previous Nacre-scoped values when the feature is disabled or the extension deactivates.
-
-See [`docs/KDE-ACCENT.md`](docs/KDE-ACCENT.md) for implementation details and limitations.
+Nacre uses the accent supplied by the desktop. It does not claim to extract a dominant color from wallpaper when the desktop does not expose one. See [`docs/SYSTEM-ACCENT.md`](docs/SYSTEM-ACCENT.md) for sources, fallback behavior and limitations.
 
 ### Nacre File Icons
 
@@ -117,7 +115,7 @@ Set it to `false` to disable inline color decorations.
 
 ```text
 .
-├── .github/workflows/validate.yml  # automated source validation
+├── .github/workflows/              # validation, test VSIX and tag-based release workflows
 ├── docs/                           # design, architecture and release docs
 ├── icons/
 │   ├── files/                      # file-type SVG artwork
@@ -125,14 +123,14 @@ Set it to `false` to disable inline color decorations.
 ├── media/                          # preview and extension icon
 ├── releases/                       # VSIX, source archive and release bundle
 ├── scripts/validate.mjs            # local package/asset validator
-├── tests/kdeAccent.test.js          # KDE adapter unit tests
+├── tests/systemAccent.test.js      # GNOME/KDE parsing and palette tests
 ├── themes/
 │   ├── nacre-color-theme.json      # workbench and syntax colors
 │   ├── nacre-file-icons.json       # file/folder icon mappings
 │   ├── nacre-product-icons.json    # product icon glyph map
 │   └── nacre-ui-icons.woff2        # bundled product icon font
 ├── extension.js                    # extension lifecycle and feature coordination
-├── kdeAccent.js                    # KDE accent detection and UI color derivation
+├── systemAccent.js                 # GNOME/KDE detection and adaptive palette derivation
 ├── package.json                    # VS Code extension manifest
 ├── CHANGELOG.md
 └── LICENSE.txt
@@ -159,13 +157,13 @@ Package the extension:
 npx --yes @vscode/vsce package --out ./releases/icrmahin.nacre-1.0.1.vsix
 ```
 
-The extension version is kept in `package.json`. A release build should only be made after updating the changelog and checking the complete validation report. The `1.0.1` VSIX is generated by the GitHub Actions release workflow and attached to the matching GitHub Release.
+The extension version is kept in `package.json`. A release build should only be made after updating the changelog and checking the complete validation report. Use the **Build Nacre Test VSIX (No Release)** workflow to validate and package a branch for local installation. It uploads a downloadable workflow artifact and does not publish a release. The release workflow is reserved for version tags.
 
 ## Validation status
 
 The source validation script checks package identity, theme registrations, theme JSON, icon JSON, SVG paths, product-icon font references, and the one-color-theme release constraint. The release archive also contains the original QA summary and SHA-256 checksums.
 
-A static package check is not the same as a live VS Code installation test. The `1.0.1` source is validated by GitHub Actions before packaging. Live installation and UI rendering should still be verified on the target VS Code version before marketplace publication.
+A static package check is not the same as a live VS Code installation test. GitHub Actions validates and packages test builds. Live installation and UI rendering must still be verified in a real VS Code session, including GNOME and KDE accent changes, before a Marketplace release.
 
 ## Attribution and licensing
 
