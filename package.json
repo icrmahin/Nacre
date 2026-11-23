@@ -64,7 +64,7 @@
         "nacre.systemAccent.enable": {
           "type": "boolean",
           "default": true,
-          "description": "Automatically tint Nacre workbench surfaces and syntax colors using the current GNOME or KDE desktop accent on Linux. Syntax colors receive a subtle 2.5% blend. Disable to restore the original Nacre palette."
+          "description": "Automatically tint Nacre workbench surfaces and syntax colors using the current GNOME or KDE desktop accent on Linux. Syntax colors receive a restrained 10% blend. Disable to restore the original Nacre palette."
         }
       }
     }
