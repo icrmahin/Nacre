@@ -1,6 +1,7 @@
 'use strict';
 
-const TINT_RATIO = 0.025;
+// 2.5% was effectively invisible on most Nacre token colors. 10% keeps their identity while making the shift perceptible.
+const TINT_RATIO = 0.10;
 const TEXT_MATE_RULE_MARKER = '__nacreSystemAccentTint__:';
 
 function normalizeHex(value) {
