@@ -5,7 +5,9 @@ const {
     watchSystemAccentColor,
 } = require('./systemAccent');
 const {
+    TINT_RATIO,
     buildNacreSyntaxCustomizations,
+    TEXT_MATE_RULE_MARKER,
     mergeSemanticRules,
     mergeTextMateRules,
     restoreSemanticRules,
@@ -19,6 +21,7 @@ let editorTimeouts = new Map();      // editor URI → timeout id
 let isEnabled = true;
 let extensionContext;
 let systemAccentWatcher;
+let outputChannel;
 let systemAccentGeneration = 0;
 
 const ORIGINAL_SYSTEM_COLORS_KEY = 'nacre.systemAccent.originalScopedColors';
@@ -41,6 +44,8 @@ const HSL_RE    = /hsla?\(\s*(\d{1,3}(?:\.\d+)?)\s*[,\s]\s*(\d{1,3}(?:\.\d+)?)%\
 // ── Activation ─────────────────────────────────────────────────────────────
 function activate(context) {
     extensionContext = context;
+    outputChannel = vscode.window.createOutputChannel('Nacre');
+    context.subscriptions.push(outputChannel);
     isEnabled = vscode.workspace
         .getConfiguration('nacre.colorHighlight')
         .get('enable', true);
@@ -286,6 +291,31 @@ async function applySyntaxCustomizations(context, accent) {
         nextSemanticScope,
     );
     await context.globalState.update(LAST_SEMANTIC_RULES_KEY, nextSemantic.applied);
+
+    const storageRuleIndex = nacreTheme.tokenColors.findIndex(rule => rule.name === 'Storage');
+    const storageRuleName = storageRuleIndex >= 0 ? `${TEXT_MATE_RULE_MARKER}${storageRuleIndex}` : null;
+    const generatedStorageColor = generated.textMateRules.find(rule => rule.name === storageRuleName)?.settings?.foreground ?? 'not found';
+    const generatedKeywordColor = generated.semanticRules.keyword?.foreground ?? 'not found';
+
+    const textMateInspection = textMateState.configuration.inspect(TEXT_MATE_CUSTOMIZATIONS_SETTING);
+    const semanticInspection = semanticState.configuration.inspect(SEMANTIC_CUSTOMIZATIONS_SETTING);
+    const hasWorkspaceTextMateOverride = Boolean(
+        textMateInspection?.workspaceValue?.[NACRE_THEME_SCOPE]
+        || textMateInspection?.workspaceFolderValue?.[NACRE_THEME_SCOPE],
+    );
+    const hasWorkspaceSemanticOverride = Boolean(
+        semanticInspection?.workspaceValue?.[NACRE_THEME_SCOPE]
+        || semanticInspection?.workspaceFolderValue?.[NACRE_THEME_SCOPE],
+    );
+
+    outputChannel?.appendLine(
+        `Syntax tint for ${accent}: Storage=${generatedStorageColor}, keyword=${generatedKeywordColor}, ${nextTextMate.applied.length} TextMate and ${Object.keys(nextSemantic.applied).length} semantic rules at ${Math.round(TINT_RATIO * 100)}%.`,
+    );
+    if (hasWorkspaceTextMateOverride || hasWorkspaceSemanticOverride) {
+        outputChannel?.appendLine(
+            'Warning: a workspace or folder [Nacre] syntax customization has higher priority than the generated global syntax tint.',
+        );
+    }
 }
 
 async function restoreSyntaxCustomizations(context) {
@@ -316,6 +346,10 @@ async function restoreSyntaxCustomizations(context) {
         await writeGlobalThemeSetting(SEMANTIC_CUSTOMIZATIONS_SETTING, semanticState, nextScope);
     }
     await context.globalState.update(LAST_SEMANTIC_RULES_KEY, undefined);
+
+    if (previousTextMateRules.length || Object.keys(previousSemanticRules).length) {
+        outputChannel?.appendLine('System accent syntax tint removed; original Nacre syntax colors are active.');
+    }
 }
 
 async function restoreSystemCustomizations(context) {

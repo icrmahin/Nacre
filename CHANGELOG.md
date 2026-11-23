@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Added subtle desktop-accent tinting for TextMate and semantic syntax colors using a 2.5% blend.
+- Added subtle desktop-accent tinting for TextMate and semantic syntax colors using a restrained 20% blend, visible without replacing the original token palette.
 - Kept the existing Nacre token hierarchy and near-black editor canvas intact.
 - Extended the existing system-accent setting to control both workbench and syntax tinting.
 - Added tests for color blending, readability, user override preservation and restoration.

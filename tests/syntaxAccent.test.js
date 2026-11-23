@@ -27,11 +27,11 @@ function contrast(first, second) {
     return (light + 0.05) / (dark + 0.05);
 }
 
-test('tints a syntax color by exactly 2.5% toward the desktop accent', () => {
-    assert.equal(TINT_RATIO, 0.025);
-    assert.equal(tintHexColor('#E6EDF3', '#F16B52'), '#E6EAEF');
-    assert.equal(tintHexColor('#A5D6FF', '#3584E4'), '#A2D4FE');
-    assert.equal(tintHexColor('#fff', '#000'), '#F9F9F9');
+test('tints syntax colors by a restrained 20% toward the desktop accent', () => {
+    assert.equal(TINT_RATIO, 0.20);
+    assert.equal(tintHexColor('#E6EDF3', '#F16B52'), '#E8D3D3');
+    assert.equal(tintHexColor('#A5D6FF', '#3584E4'), '#8FC6FA');
+    assert.equal(tintHexColor('#fff', '#000'), '#CCCCCC');
 });
 
 test('rejects invalid colors and invalid blend ratios', () => {
@@ -67,6 +67,22 @@ test('adapts semantic tokens using the same blend while preserving role differen
         generated.semanticRules.type.foreground,
         generated.semanticRules.string.foreground,
     );
+});
+
+test('changes the same syntax roles between different desktop accents', () => {
+    const teal = buildNacreSyntaxCustomizations(theme, '#4C8F94');
+    const burgundy = buildNacreSyntaxCustomizations(theme, '#7E3B52');
+
+    const storageIndex = theme.tokenColors.findIndex(rule => rule.name === 'Storage');
+    const storageName = `${TEXT_MATE_RULE_MARKER}${storageIndex}`;
+    const tealStorage = teal.textMateRules.find(rule => rule.name === storageName).settings.foreground;
+    const burgundyStorage = burgundy.textMateRules.find(rule => rule.name === storageName).settings.foreground;
+
+    assert.equal(tealStorage, '#DB7F79');
+    assert.equal(burgundyStorage, '#E56E6C');
+    assert.notEqual(tealStorage, burgundyStorage);
+    assert.notEqual(teal.semanticRules.keyword.foreground, burgundy.semanticRules.keyword.foreground);
+    assert.notEqual(teal.semanticRules.function.foreground, burgundy.semanticRules.function.foreground);
 });
 
 test('keeps tinted syntax colors comfortably readable on Nacre near-black', () => {
