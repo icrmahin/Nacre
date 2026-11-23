@@ -7,6 +7,7 @@ const {
 const {
     TINT_RATIO,
     buildNacreSyntaxCustomizations,
+    TEXT_MATE_RULE_MARKER,
     mergeSemanticRules,
     mergeTextMateRules,
     restoreSemanticRules,
@@ -291,9 +292,36 @@ async function applySyntaxCustomizations(context, accent) {
     );
     await context.globalState.update(LAST_SEMANTIC_RULES_KEY, nextSemantic.applied);
 
+
     outputChannel?.appendLine(
         `System accent syntax tint applied for ${accent}: ${nextTextMate.applied.length} TextMate rules and ${Object.keys(nextSemantic.applied).length} semantic rules at ${Math.round(TINT_RATIO * 100)}% blend.`,
     );
+
+    const storageRuleIndex = nacreTheme.tokenColors.findIndex(rule => rule.name === 'Storage');
+    const storageRuleName = storageRuleIndex >= 0 ? `${TEXT_MATE_RULE_MARKER}${storageRuleIndex}` : null;
+    const generatedStorageColor = generated.textMateRules.find(rule => rule.name === storageRuleName)?.settings?.foreground ?? 'not found';
+    const generatedKeywordColor = generated.semanticRules.keyword?.foreground ?? 'not found';
+
+    const textMateInspection = textMateState.configuration.inspect(TEXT_MATE_CUSTOMIZATIONS_SETTING);
+    const semanticInspection = semanticState.configuration.inspect(SEMANTIC_CUSTOMIZATIONS_SETTING);
+    const hasWorkspaceTextMateOverride = Boolean(
+        textMateInspection?.workspaceValue?.[NACRE_THEME_SCOPE]
+        || textMateInspection?.workspaceFolderValue?.[NACRE_THEME_SCOPE],
+    );
+    const hasWorkspaceSemanticOverride = Boolean(
+        semanticInspection?.workspaceValue?.[NACRE_THEME_SCOPE]
+        || semanticInspection?.workspaceFolderValue?.[NACRE_THEME_SCOPE],
+    );
+
+    outputChannel?.appendLine(
+        `Syntax tint for ${accent}: Storage=${generatedStorageColor}, keyword=${generatedKeywordColor}, ${nextTextMate.applied.length} TextMate and ${Object.keys(nextSemantic.applied).length} semantic rules at ${Math.round(TINT_RATIO * 100)}%.`,
+    );
+    if (hasWorkspaceTextMateOverride || hasWorkspaceSemanticOverride) {
+        outputChannel?.appendLine(
+            'Warning: a workspace or folder [Nacre] syntax customization has higher priority than the generated global syntax tint.',
+        );
+    }
+
 }
 
 async function restoreSyntaxCustomizations(context) {
