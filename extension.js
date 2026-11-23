@@ -29,8 +29,8 @@ const LAST_SYSTEM_COLORS_KEY = 'nacre.systemAccent.lastAppliedColors';
 const LAST_TEXT_MATE_RULES_KEY = 'nacre.systemAccent.lastAppliedTextMateRules';
 const LAST_SEMANTIC_RULES_KEY = 'nacre.systemAccent.lastAppliedSemanticRules';
 const NACRE_THEME_SCOPE = '[Nacre]';
-const TEXT_MATE_CUSTOMIZATIONS_SETTING = 'editor.tokenColorCustomizations';
-const SEMANTIC_CUSTOMIZATIONS_SETTING = 'editor.semanticTokenColorCustomizations';
+const TEXT_MATE_CUSTOMIZATIONS_SETTING = 'tokenColorCustomizations';
+const SEMANTIC_CUSTOMIZATIONS_SETTING = 'semanticTokenColorCustomizations';
 
 const MAX_FILE_SIZE = 500000;        // 500 KB – skip very large files
 const MAX_UNIQUE_COLORS = 500;       // max decoration types per update
@@ -211,7 +211,7 @@ function isPlainObject(value) {
 }
 
 function readGlobalThemeSetting(settingId) {
-    const configuration = vscode.workspace.getConfiguration();
+    const configuration = vscode.workspace.getConfiguration('editor');
     const inspected = configuration.inspect(settingId);
     const globalValue = isPlainObject(inspected?.globalValue)
         ? inspected.globalValue
@@ -292,6 +292,11 @@ async function applySyntaxCustomizations(context, accent) {
     );
     await context.globalState.update(LAST_SEMANTIC_RULES_KEY, nextSemantic.applied);
 
+
+    outputChannel?.appendLine(
+        `System accent syntax tint applied for ${accent}: ${nextTextMate.applied.length} TextMate rules and ${Object.keys(nextSemantic.applied).length} semantic rules at ${Math.round(TINT_RATIO * 100)}% blend.`,
+    );
+
     const storageRuleIndex = nacreTheme.tokenColors.findIndex(rule => rule.name === 'Storage');
     const storageRuleName = storageRuleIndex >= 0 ? `${TEXT_MATE_RULE_MARKER}${storageRuleIndex}` : null;
     const generatedStorageColor = generated.textMateRules.find(rule => rule.name === storageRuleName)?.settings?.foreground ?? 'not found';
@@ -316,6 +321,7 @@ async function applySyntaxCustomizations(context, accent) {
             'Warning: a workspace or folder [Nacre] syntax customization has higher priority than the generated global syntax tint.',
         );
     }
+
 }
 
 async function restoreSyntaxCustomizations(context) {

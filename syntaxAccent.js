@@ -1,7 +1,12 @@
 'use strict';
 
+
+// 2.5% was effectively invisible on most Nacre token colors. 10% keeps their identity while making the shift perceptible.
+const TINT_RATIO = 0.10;
+
 // A 20% blend gives distinct wallpaper accents a visible syntax effect while retaining each token's original role.
 const TINT_RATIO = 0.20;
+
 const TEXT_MATE_RULE_MARKER = '__nacreSystemAccentTint__:';
 const MIN_EDITOR_CONTRAST = 4.5;
 const EDITOR_BACKGROUND = '#0B0C0E';

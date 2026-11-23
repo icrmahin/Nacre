@@ -79,7 +79,11 @@ A single maintained color theme. The previous experimental color variants are no
 
 ### GNOME and KDE system accent integration
 
+
+On Linux, Nacre can automatically follow the desktop accent exposed by GNOME, KDE Plasma or a compatible Freedesktop appearance portal. GNOME 47+ uses its GSettings accent preference, while KDE prefers the appearance portal and falls back to `kdeglobals`. The integration gently tints workbench surfaces and accent states. It also blends 10% of the desktop accent into existing TextMate and semantic syntax colors, keeping Nacre's original token roles and hierarchy. The `#0B0C0E` editor canvas stays neutral. One setting controls both behaviors: `nacre.systemAccent.enable`.
+
 On Linux, Nacre can automatically follow the desktop accent exposed by GNOME, KDE Plasma or a compatible Freedesktop appearance portal. GNOME 47+ uses its GSettings accent preference, while KDE prefers the appearance portal and falls back to `kdeglobals`. The integration gently tints workbench surfaces and accent states. It also blends 20% of the desktop accent into existing TextMate and semantic syntax colors, keeping Nacre's original token roles and hierarchy. The `#0B0C0E` editor canvas stays neutral. One setting controls both behaviors: `nacre.systemAccent.enable`.
+
 
 Nacre uses the accent supplied by the desktop. It does not claim to extract a dominant color from wallpaper when the desktop does not expose one. See [`docs/SYSTEM-ACCENT.md`](docs/SYSTEM-ACCENT.md) for sources, fallback behavior and limitations.
 
