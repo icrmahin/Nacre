@@ -4,6 +4,14 @@ const {
     readSystemAccentColor,
     watchSystemAccentColor,
 } = require('./systemAccent');
+const {
+    buildNacreSyntaxCustomizations,
+    mergeSemanticRules,
+    mergeTextMateRules,
+    restoreSemanticRules,
+    restoreTextMateRules,
+} = require('./syntaxAccent');
+const nacreTheme = require('./themes/nacre-color-theme.json');
 
 // ── State ──────────────────────────────────────────────────────────────────
 let decorationTypeCache = new Map(); // "bgColor|fgColor" → TextEditorDecorationType
@@ -15,6 +23,11 @@ let systemAccentGeneration = 0;
 
 const ORIGINAL_SYSTEM_COLORS_KEY = 'nacre.systemAccent.originalScopedColors';
 const LAST_SYSTEM_COLORS_KEY = 'nacre.systemAccent.lastAppliedColors';
+const LAST_TEXT_MATE_RULES_KEY = 'nacre.systemAccent.lastAppliedTextMateRules';
+const LAST_SEMANTIC_RULES_KEY = 'nacre.systemAccent.lastAppliedSemanticRules';
+const NACRE_THEME_SCOPE = '[Nacre]';
+const TEXT_MATE_CUSTOMIZATIONS_SETTING = 'editor.tokenColorCustomizations';
+const SEMANTIC_CUSTOMIZATIONS_SETTING = 'editor.semanticTokenColorCustomizations';
 
 const MAX_FILE_SIZE = 500000;        // 500 KB – skip very large files
 const MAX_UNIQUE_COLORS = 500;       // max decoration types per update
@@ -185,44 +198,164 @@ async function applySystemCustomizations(context, accent) {
         );
     }
     await context.globalState.update(LAST_SYSTEM_COLORS_KEY, colors);
+    await applySyntaxCustomizations(context, accent);
+}
+
+function isPlainObject(value) {
+    return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+
+function readGlobalThemeSetting(settingId) {
+    const configuration = vscode.workspace.getConfiguration();
+    const inspected = configuration.inspect(settingId);
+    const globalValue = isPlainObject(inspected?.globalValue)
+        ? inspected.globalValue
+        : {};
+    const scope = isPlainObject(globalValue[NACRE_THEME_SCOPE])
+        ? globalValue[NACRE_THEME_SCOPE]
+        : {};
+
+    return { configuration, globalValue, scope };
+}
+
+async function writeGlobalThemeSetting(settingId, state, nextScope) {
+    const nextGlobalValue = { ...state.globalValue };
+    if (Object.keys(nextScope).length > 0) {
+        nextGlobalValue[NACRE_THEME_SCOPE] = nextScope;
+    } else {
+        delete nextGlobalValue[NACRE_THEME_SCOPE];
+    }
+
+    if (JSON.stringify(nextGlobalValue) === JSON.stringify(state.globalValue)) return;
+    await state.configuration.update(
+        settingId,
+        Object.keys(nextGlobalValue).length > 0 ? nextGlobalValue : undefined,
+        vscode.ConfigurationTarget.Global,
+    );
+}
+
+async function applySyntaxCustomizations(context, accent) {
+    const generated = buildNacreSyntaxCustomizations(nacreTheme, accent);
+    if (!generated.textMateRules.length && !Object.keys(generated.semanticRules).length) {
+        await restoreSyntaxCustomizations(context);
+        return;
+    }
+
+    const textMateState = readGlobalThemeSetting(TEXT_MATE_CUSTOMIZATIONS_SETTING);
+    const previousTextMateRules = context.globalState.get(LAST_TEXT_MATE_RULES_KEY, []);
+    const currentTextMateRules = Array.isArray(textMateState.scope.textMateRules)
+        ? textMateState.scope.textMateRules
+        : [];
+    const nextTextMate = mergeTextMateRules(
+        currentTextMateRules,
+        generated.textMateRules,
+        previousTextMateRules,
+    );
+    const nextTextMateScope = { ...textMateState.scope };
+    if (nextTextMate.rules.length > 0) {
+        nextTextMateScope.textMateRules = nextTextMate.rules;
+    } else {
+        delete nextTextMateScope.textMateRules;
+    }
+    await writeGlobalThemeSetting(
+        TEXT_MATE_CUSTOMIZATIONS_SETTING,
+        textMateState,
+        nextTextMateScope,
+    );
+    await context.globalState.update(LAST_TEXT_MATE_RULES_KEY, nextTextMate.applied);
+
+    const semanticState = readGlobalThemeSetting(SEMANTIC_CUSTOMIZATIONS_SETTING);
+    const previousSemanticRules = context.globalState.get(LAST_SEMANTIC_RULES_KEY, {});
+    const currentSemanticRules = isPlainObject(semanticState.scope.rules)
+        ? semanticState.scope.rules
+        : {};
+    const nextSemantic = mergeSemanticRules(
+        currentSemanticRules,
+        generated.semanticRules,
+        previousSemanticRules,
+    );
+    const nextSemanticScope = { ...semanticState.scope };
+    if (Object.keys(nextSemantic.rules).length > 0) {
+        nextSemanticScope.rules = nextSemantic.rules;
+    } else {
+        delete nextSemanticScope.rules;
+    }
+    await writeGlobalThemeSetting(
+        SEMANTIC_CUSTOMIZATIONS_SETTING,
+        semanticState,
+        nextSemanticScope,
+    );
+    await context.globalState.update(LAST_SEMANTIC_RULES_KEY, nextSemantic.applied);
+}
+
+async function restoreSyntaxCustomizations(context) {
+    const previousTextMateRules = context.globalState.get(LAST_TEXT_MATE_RULES_KEY, []);
+    if (Array.isArray(previousTextMateRules) && previousTextMateRules.length > 0) {
+        const textMateState = readGlobalThemeSetting(TEXT_MATE_CUSTOMIZATIONS_SETTING);
+        const currentRules = Array.isArray(textMateState.scope.textMateRules)
+            ? textMateState.scope.textMateRules
+            : [];
+        const restoredRules = restoreTextMateRules(currentRules, previousTextMateRules);
+        const nextScope = { ...textMateState.scope };
+        if (restoredRules.length > 0) nextScope.textMateRules = restoredRules;
+        else delete nextScope.textMateRules;
+        await writeGlobalThemeSetting(TEXT_MATE_CUSTOMIZATIONS_SETTING, textMateState, nextScope);
+    }
+    await context.globalState.update(LAST_TEXT_MATE_RULES_KEY, undefined);
+
+    const previousSemanticRules = context.globalState.get(LAST_SEMANTIC_RULES_KEY, {});
+    if (isPlainObject(previousSemanticRules) && Object.keys(previousSemanticRules).length > 0) {
+        const semanticState = readGlobalThemeSetting(SEMANTIC_CUSTOMIZATIONS_SETTING);
+        const currentRules = isPlainObject(semanticState.scope.rules)
+            ? semanticState.scope.rules
+            : {};
+        const restoredRules = restoreSemanticRules(currentRules, previousSemanticRules);
+        const nextScope = { ...semanticState.scope };
+        if (Object.keys(restoredRules).length > 0) nextScope.rules = restoredRules;
+        else delete nextScope.rules;
+        await writeGlobalThemeSetting(SEMANTIC_CUSTOMIZATIONS_SETTING, semanticState, nextScope);
+    }
+    await context.globalState.update(LAST_SEMANTIC_RULES_KEY, undefined);
 }
 
 async function restoreSystemCustomizations(context) {
     const original = context.globalState.get(ORIGINAL_SYSTEM_COLORS_KEY);
     const lastApplied = context.globalState.get(LAST_SYSTEM_COLORS_KEY);
-    if (!original || !lastApplied) return;
 
-    const workbench = vscode.workspace.getConfiguration('workbench');
-    const inspected = workbench.inspect('colorCustomizations');
-    const globalColors = inspected?.globalValue && typeof inspected.globalValue === 'object'
-        ? inspected.globalValue
-        : {};
-    const themeScope = '[Nacre]';
-    const currentScope = { ...(globalColors[themeScope] ?? {}) };
+    if (original && lastApplied) {
+        const workbench = vscode.workspace.getConfiguration('workbench');
+        const inspected = workbench.inspect('colorCustomizations');
+        const globalColors = inspected?.globalValue && typeof inspected.globalValue === 'object'
+            ? inspected.globalValue
+            : {};
+        const currentScope = { ...(globalColors[NACRE_THEME_SCOPE] ?? {}) };
 
-    // Restore only keys owned by this integration; leave other scoped customizations intact.
-    for (const key of Object.keys(lastApplied)) {
-        if (Object.prototype.hasOwnProperty.call(original.value ?? {}, key)) {
-            currentScope[key] = original.value[key];
-        } else {
-            delete currentScope[key];
+        // Restore only keys owned by this integration; leave other scoped customizations intact.
+        for (const key of Object.keys(lastApplied)) {
+            if (Object.prototype.hasOwnProperty.call(original.value ?? {}, key)) {
+                currentScope[key] = original.value[key];
+            } else {
+                delete currentScope[key];
+            }
         }
+
+        const nextGlobalColors = { ...globalColors };
+        if (original.hadScope || Object.keys(currentScope).length > 0) {
+            nextGlobalColors[NACRE_THEME_SCOPE] = currentScope;
+        } else {
+            delete nextGlobalColors[NACRE_THEME_SCOPE];
+        }
+
+        await workbench.update(
+            'colorCustomizations',
+            nextGlobalColors,
+            vscode.ConfigurationTarget.Global,
+        );
+        await context.globalState.update(ORIGINAL_SYSTEM_COLORS_KEY, undefined);
+        await context.globalState.update(LAST_SYSTEM_COLORS_KEY, undefined);
     }
 
-    const nextGlobalColors = { ...globalColors };
-    if (original.hadScope || Object.keys(currentScope).length > 0) {
-        nextGlobalColors[themeScope] = currentScope;
-    } else {
-        delete nextGlobalColors[themeScope];
-    }
-
-    await workbench.update(
-        'colorCustomizations',
-        nextGlobalColors,
-        vscode.ConfigurationTarget.Global,
-    );
-    await context.globalState.update(ORIGINAL_SYSTEM_COLORS_KEY, undefined);
-    await context.globalState.update(LAST_SYSTEM_COLORS_KEY, undefined);
+    await restoreSyntaxCustomizations(context);
 }
 
 async function stopSystemAccentSync(context) {

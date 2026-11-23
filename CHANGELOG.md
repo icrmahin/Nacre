@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Added subtle desktop-accent tinting for TextMate and semantic syntax colors using a 2.5% blend.
+- Kept the existing Nacre token hierarchy and near-black editor canvas intact.
+- Extended the existing system-accent setting to control both workbench and syntax tinting.
+- Added tests for color blending, readability, user override preservation and restoration.
+
+
 ## 1.0.1 — KDE Plasma accent integration
 
 - Added configurable KDE Plasma accent synchronization for Nacre workbench UI colors, enabled by default on KDE Linux sessions.

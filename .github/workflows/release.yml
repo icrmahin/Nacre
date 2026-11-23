@@ -26,6 +26,7 @@ jobs:
           npm test
           node --check extension.js
           node --check systemAccent.js
+          node --check syntaxAccent.js
 
       - name: Verify tag matches package version
         id: version

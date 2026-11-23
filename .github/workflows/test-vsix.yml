@@ -5,6 +5,10 @@ on:
   push:
     branches:
       - feat/nacre-system-accent-darkness
+      - feat/nacre-accent-adaptive-syntax
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: read
@@ -35,6 +39,7 @@ jobs:
         run: |
           node --check extension.js
           if [[ -f systemAccent.js ]]; then node --check systemAccent.js; fi
+          if [[ -f syntaxAccent.js ]]; then node --check syntaxAccent.js; fi
           if [[ -f kdeAccent.js ]]; then node --check kdeAccent.js; fi
 
       - name: Package VSIX for local testing
