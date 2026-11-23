@@ -322,12 +322,23 @@ function hslToRgb({ h, s, l }) {
     return { r: (r + match) * 255, g: (g + match) * 255, b: (b + match) * 255 };
 }
 
+function hasAccessibleForeground(background) {
+    return Math.max(
+        contrastRatio(background, '#FFFFFF'),
+        contrastRatio(background, '#151719'),
+    ) >= 4.5;
+}
+
 function readableAccent(accent, surface = '#101113') {
-    if (contrastRatio(accent, surface) >= 4.5) return accent;
+    const isReadable = color =>
+        contrastRatio(color, surface) >= 4.5 && hasAccessibleForeground(color);
+
+    if (isReadable(accent)) return accent;
+
     const original = rgbToHsl(hexToRgb(accent));
     for (let lightness = original.l; lightness <= 1; lightness += 0.005) {
         const candidate = rgbToHex(hslToRgb({ ...original, l: Math.min(lightness, 1) }));
-        if (contrastRatio(candidate, surface) >= 4.5) return candidate;
+        if (isReadable(candidate)) return candidate;
     }
     return '#FFFFFF';
 }
