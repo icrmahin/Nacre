@@ -124,7 +124,6 @@ Set it to `false` to disable inline color decorations.
 ├── releases/                       # VSIX, source archive and release bundle
 ├── scripts/validate.mjs            # local package/asset validator
 ├── tests/systemAccent.test.js      # GNOME/KDE parsing and palette tests
-│   └── tests/kdeAccent.test.js      # legacy KDE parser compatibility tests
 ├── themes/
 │   ├── nacre-color-theme.json      # workbench and syntax colors
 │   ├── nacre-file-icons.json       # file/folder icon mappings
