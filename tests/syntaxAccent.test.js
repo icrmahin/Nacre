@@ -27,11 +27,11 @@ function contrast(first, second) {
     return (light + 0.05) / (dark + 0.05);
 }
 
-test('tints a syntax color by exactly 2.5% toward the desktop accent', () => {
-    assert.equal(TINT_RATIO, 0.025);
-    assert.equal(tintHexColor('#E6EDF3', '#F16B52'), '#E6EAEF');
-    assert.equal(tintHexColor('#A5D6FF', '#3584E4'), '#A2D4FE');
-    assert.equal(tintHexColor('#fff', '#000'), '#F9F9F9');
+test('tints syntax colors by a restrained 10% toward the desktop accent', () => {
+    assert.equal(TINT_RATIO, 0.10);
+    assert.equal(tintHexColor('#E6EDF3', '#F16B52'), '#E7E0E3');
+    assert.equal(tintHexColor('#A5D6FF', '#3584E4'), '#9ACEFC');
+    assert.equal(tintHexColor('#fff', '#000'), '#E6E6E6');
 });
 
 test('rejects invalid colors and invalid blend ratios', () => {
