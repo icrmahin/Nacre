@@ -2,7 +2,7 @@
   "name": "nacre",
   "displayName": "Nacre — Premium Dark Theme",
   "description": "A refined near-black Visual Studio Code theme with automatic GNOME and KDE accent integration, subtly adaptive syntax colors, custom file icons and product UI icons.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "icrmahin",
   "author": "ICRMAHIN",
   "icon": "nacre-theme-icon.png",
