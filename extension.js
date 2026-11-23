@@ -5,6 +5,7 @@ const {
     watchSystemAccentColor,
 } = require('./systemAccent');
 const {
+    TINT_RATIO,
     buildNacreSyntaxCustomizations,
     mergeSemanticRules,
     mergeTextMateRules,
@@ -19,6 +20,7 @@ let editorTimeouts = new Map();      // editor URI → timeout id
 let isEnabled = true;
 let extensionContext;
 let systemAccentWatcher;
+let outputChannel;
 let systemAccentGeneration = 0;
 
 const ORIGINAL_SYSTEM_COLORS_KEY = 'nacre.systemAccent.originalScopedColors';
@@ -26,8 +28,8 @@ const LAST_SYSTEM_COLORS_KEY = 'nacre.systemAccent.lastAppliedColors';
 const LAST_TEXT_MATE_RULES_KEY = 'nacre.systemAccent.lastAppliedTextMateRules';
 const LAST_SEMANTIC_RULES_KEY = 'nacre.systemAccent.lastAppliedSemanticRules';
 const NACRE_THEME_SCOPE = '[Nacre]';
-const TEXT_MATE_CUSTOMIZATIONS_SETTING = 'editor.tokenColorCustomizations';
-const SEMANTIC_CUSTOMIZATIONS_SETTING = 'editor.semanticTokenColorCustomizations';
+const TEXT_MATE_CUSTOMIZATIONS_SETTING = 'tokenColorCustomizations';
+const SEMANTIC_CUSTOMIZATIONS_SETTING = 'semanticTokenColorCustomizations';
 
 const MAX_FILE_SIZE = 500000;        // 500 KB – skip very large files
 const MAX_UNIQUE_COLORS = 500;       // max decoration types per update
@@ -41,6 +43,8 @@ const HSL_RE    = /hsla?\(\s*(\d{1,3}(?:\.\d+)?)\s*[,\s]\s*(\d{1,3}(?:\.\d+)?)%\
 // ── Activation ─────────────────────────────────────────────────────────────
 function activate(context) {
     extensionContext = context;
+    outputChannel = vscode.window.createOutputChannel('Nacre');
+    context.subscriptions.push(outputChannel);
     isEnabled = vscode.workspace
         .getConfiguration('nacre.colorHighlight')
         .get('enable', true);
@@ -206,7 +210,7 @@ function isPlainObject(value) {
 }
 
 function readGlobalThemeSetting(settingId) {
-    const configuration = vscode.workspace.getConfiguration();
+    const configuration = vscode.workspace.getConfiguration('editor');
     const inspected = configuration.inspect(settingId);
     const globalValue = isPlainObject(inspected?.globalValue)
         ? inspected.globalValue
@@ -286,6 +290,10 @@ async function applySyntaxCustomizations(context, accent) {
         nextSemanticScope,
     );
     await context.globalState.update(LAST_SEMANTIC_RULES_KEY, nextSemantic.applied);
+
+    outputChannel?.appendLine(
+        `System accent syntax tint applied for ${accent}: ${nextTextMate.applied.length} TextMate rules and ${Object.keys(nextSemantic.applied).length} semantic rules at ${Math.round(TINT_RATIO * 100)}% blend.`,
+    );
 }
 
 async function restoreSyntaxCustomizations(context) {
@@ -316,6 +324,10 @@ async function restoreSyntaxCustomizations(context) {
         await writeGlobalThemeSetting(SEMANTIC_CUSTOMIZATIONS_SETTING, semanticState, nextScope);
     }
     await context.globalState.update(LAST_SEMANTIC_RULES_KEY, undefined);
+
+    if (previousTextMateRules.length || Object.keys(previousSemanticRules).length) {
+        outputChannel?.appendLine('System accent syntax tint removed; original Nacre syntax colors are active.');
+    }
 }
 
 async function restoreSystemCustomizations(context) {
