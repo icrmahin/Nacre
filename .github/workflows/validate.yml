@@ -24,4 +24,4 @@ jobs:
       - name: Check extension JavaScript syntax
         run: |
           node --check extension.js
-          node --check kdeAccent.js
+          node --check systemAccent.js
