@@ -330,15 +330,25 @@ function hasAccessibleForeground(background) {
 }
 
 function readableAccent(accent, surface = '#101113') {
-    const isReadable = color =>
-        contrastRatio(color, surface) >= 4.5 && hasAccessibleForeground(color);
-
-    if (isReadable(accent)) return accent;
+    if (contrastRatio(accent, surface) >= 4.5) return accent;
 
     const original = rgbToHsl(hexToRgb(accent));
     for (let lightness = original.l; lightness <= 1; lightness += 0.005) {
         const candidate = rgbToHex(hslToRgb({ ...original, l: Math.min(lightness, 1) }));
-        if (isReadable(candidate)) return candidate;
+        if (contrastRatio(candidate, surface) >= 4.5) return candidate;
+    }
+    return '#FFFFFF';
+}
+
+function readableButtonAccent(accent) {
+    if (hasAccessibleForeground(accent)) return accent;
+
+    // A focus/link accent can sit near the narrow luminance range where neither
+    // white nor dark text reaches 4.5:1. Lift only button fills slightly further.
+    const original = rgbToHsl(hexToRgb(accent));
+    for (let lightness = original.l; lightness <= 1; lightness += 0.005) {
+        const candidate = rgbToHex(hslToRgb({ ...original, l: Math.min(lightness, 1) }));
+        if (hasAccessibleForeground(candidate)) return candidate;
     }
     return '#FFFFFF';
 }
@@ -352,10 +362,11 @@ function buildNacreCustomizations(accentColor) {
     const raisedSurface = mixColors('#17191C', accent, 0.05);
     const border = mixColors('#25282D', accent, 0.12);
     const uiAccent = readableAccent(accent, surface);
+    const buttonAccent = readableButtonAccent(uiAccent);
     const accentSurface = mixColors(surface, uiAccent, 0.20);
     const accentSelection = mixColors(editor, uiAccent, 0.28);
     const accentSoft = mixColors(editor, uiAccent, 0.16);
-    const buttonForeground = bestContrastForeground(uiAccent);
+    const buttonForeground = bestContrastForeground(buttonAccent);
 
     return {
         'editor.background': editor,
@@ -451,7 +462,7 @@ function buildNacreCustomizations(accentColor) {
         'list.inactiveSelectionBackground': mixColors(surface, accent, 0.11),
         'list.dropBackground': `${accent}25`,
         'list.dropBetweenBackground': `${accent}25`,
-        'activityBarBadge.background': uiAccent,
+        'activityBarBadge.background': buttonAccent,
         'activityBarBadge.foreground': buttonForeground,
         'badge.background': accentSurface,
         'badge.foreground': '#F4F6FB',
@@ -459,16 +470,16 @@ function buildNacreCustomizations(accentColor) {
         'list.highlightForeground': uiAccent,
         'editorSuggestWidget.highlightForeground': uiAccent,
         'settings.modifiedItemIndicator': uiAccent,
-        'settings.checkboxBackground': uiAccent,
+        'settings.checkboxBackground': buttonAccent,
         'settings.checkboxForeground': buttonForeground,
         'chat.slashCommandForeground': uiAccent,
         'chat.slashCommandBackground': accentSurface,
-        'button.background': uiAccent,
+        'button.background': buttonAccent,
         'button.foreground': buttonForeground,
-        'button.hoverBackground': mixColors(uiAccent, buttonForeground, 0.12),
-        'extensionButton.prominentBackground': uiAccent,
+        'button.hoverBackground': mixColors(buttonAccent, buttonForeground, 0.12),
+        'extensionButton.prominentBackground': buttonAccent,
         'extensionButton.prominentForeground': buttonForeground,
-        'extensionButton.prominentHoverBackground': mixColors(uiAccent, buttonForeground, 0.12),
+        'extensionButton.prominentHoverBackground': mixColors(buttonAccent, buttonForeground, 0.12),
         'statusBarItem.remoteHoverBackground': accentSurface,
         'statusBarItem.remoteHoverForeground': '#F4F6FB',
         'toolbar.hoverBackground': accentSurface,
