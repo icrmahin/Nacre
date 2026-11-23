@@ -6,7 +6,10 @@ const {
     buildNacreCustomizations,
     isGnomeSession,
     isKdeSession,
+    getKdeGlobalsPath,
+    parseColorValue,
     parseGnomeAccent,
+    parseKdeGlobals,
     parsePortalAccent,
 } = require('../systemAccent');
 
@@ -35,8 +38,42 @@ test('maps GNOME named accent preferences to their system colors', () => {
     assert.equal(parseGnomeAccent("'default'"), null);
 });
 
-test('accepts portal normalized RGB accent tuples', () => {
+test('parses KDE RGB and hex color values', () => {
+    assert.equal(parseColorValue('61, 174, 233'), '#3DAEE9');
+    assert.equal(parseColorValue('#3daee9'), '#3DAEE9');
+    assert.equal(parseColorValue('999, 20, 30'), null);
+});
+
+test('prefers KDE AccentColor and falls back to the selection color', () => {
+    const explicit = [
+        '[General]',
+        'AccentColor=61,174,233',
+        '',
+        '[Colors:Selection]',
+        'BackgroundNormal=255,0,0',
+    ].join('\\n');
+    const fallback = [
+        '[General]',
+        'ColorScheme=BreezeDark',
+        '',
+        '[Colors:Selection]',
+        'BackgroundNormal=255, 0, 0',
+    ].join('\\n');
+    assert.equal(parseKdeGlobals(explicit), '#3DAEE9');
+    assert.equal(parseKdeGlobals(fallback), '#FF0000');
+});
+
+test('resolves kdeglobals below XDG_CONFIG_HOME', () => {
+    assert.equal(
+        getKdeGlobalsPath({ XDG_CONFIG_HOME: '/tmp/test-config' }, '/home/test'),
+        '/tmp/test-config/kdeglobals',
+    );
+});
+
+test('accepts portal normalized RGB tuples and rejects invalid components', () => {
     assert.equal(parsePortalAccent('(<(0.2392157, 0.6823529, 0.9137255)>,)'), '#3DAEE9');
+    assert.equal(parsePortalAccent('(<[0.2392157, 0.6823529, 0.9137255]>,)'), '#3DAEE9');
+    assert.equal(parsePortalAccent('(<(0.2, 0.3, 1.1)>,)'), null);
     assert.equal(parsePortalAccent('()'), null);
 });
 
