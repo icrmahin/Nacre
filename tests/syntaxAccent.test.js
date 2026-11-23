@@ -78,8 +78,8 @@ test('changes the same syntax roles between different desktop accents', () => {
     const tealStorage = teal.textMateRules.find(rule => rule.name === storageName).settings.foreground;
     const burgundyStorage = burgundy.textMateRules.find(rule => rule.name === storageName).settings.foreground;
 
-    assert.equal(tealStorage, '#ED7D75');
-    assert.equal(burgundyStorage, '#F2756F');
+    assert.equal(tealStorage, '#DB7F79');
+    assert.equal(burgundyStorage, '#E56E6C');
     assert.notEqual(tealStorage, burgundyStorage);
     assert.notEqual(teal.semanticRules.keyword.foreground, burgundy.semanticRules.keyword.foreground);
     assert.notEqual(teal.semanticRules.function.foreground, burgundy.semanticRules.function.foreground);
