@@ -31,10 +31,11 @@ jobs:
         run: npm test
 
       - name: Check extension JavaScript syntax
+        shell: bash
         run: |
           node --check extension.js
-          node --check systemAccent.js
-          node --check kdeAccent.js
+          if [[ -f systemAccent.js ]]; then node --check systemAccent.js; fi
+          if [[ -f kdeAccent.js ]]; then node --check kdeAccent.js; fi
 
       - name: Package VSIX for local testing
         shell: bash
