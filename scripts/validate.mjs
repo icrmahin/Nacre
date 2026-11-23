@@ -23,7 +23,7 @@ if (pkg) {
   else pass('Package name is nacre');
   if (pkg.publisher !== 'icrmahin') fail(`Expected publisher "icrmahin", found "${pkg.publisher}"`);
   else pass('Publisher is icrmahin');
-  if (!/^\\d+\\.\\d+\\.\\d+$/.test(pkg.version ?? '')) fail(`Expected a valid semantic version, found "${pkg.version}"`);
+  if (!/^\d+\.\d+\.\d+$/.test(pkg.version ?? '')) fail(`Expected a valid semantic version, found "${pkg.version}"`);
   else pass(`Package version is ${pkg.version}`);
 
   const themes = pkg.contributes?.themes ?? [];
