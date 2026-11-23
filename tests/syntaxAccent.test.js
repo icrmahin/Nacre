@@ -69,6 +69,22 @@ test('adapts semantic tokens using the same blend while preserving role differen
     );
 });
 
+test('changes the same syntax roles between different desktop accents', () => {
+    const teal = buildNacreSyntaxCustomizations(theme, '#4C8F94');
+    const burgundy = buildNacreSyntaxCustomizations(theme, '#7E3B52');
+
+    const storageIndex = theme.tokenColors.findIndex(rule => rule.name === 'Storage');
+    const storageName = `${TEXT_MATE_RULE_MARKER}${storageIndex}`;
+    const tealStorage = teal.textMateRules.find(rule => rule.name === storageName).settings.foreground;
+    const burgundyStorage = burgundy.textMateRules.find(rule => rule.name === storageName).settings.foreground;
+
+    assert.equal(tealStorage, '#ED7D75');
+    assert.equal(burgundyStorage, '#F2756F');
+    assert.notEqual(tealStorage, burgundyStorage);
+    assert.notEqual(teal.semanticRules.keyword.foreground, burgundy.semanticRules.keyword.foreground);
+    assert.notEqual(teal.semanticRules.function.foreground, burgundy.semanticRules.function.foreground);
+});
+
 test('keeps tinted syntax colors comfortably readable on Nacre near-black', () => {
     for (const accent of ['#000000', '#3584E4', '#F16B52', '#FFFF00', '#FFFFFF']) {
         const generated = buildNacreSyntaxCustomizations(theme, accent);
