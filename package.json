@@ -1,7 +1,7 @@
 {
   "name": "nacre",
   "displayName": "Nacre — Premium Dark Theme",
-  "description": "A premium near-black and graphite Visual Studio Code theme with adaptive KDE Plasma accents, carefully tiered syntax highlighting, custom file icons and product UI icons.",
+  "description": "A refined near-black Visual Studio Code theme with automatic GNOME and KDE accent integration, precise syntax hierarchy, custom file icons and product UI icons.",
   "version": "1.0.1",
   "publisher": "icrmahin",
   "author": "ICRMAHIN",
@@ -25,9 +25,11 @@
     "file icons",
     "product icons",
     "developer theme",
-    "kde",
-    "plasma",
-    "adaptive accent"
+    "adaptive accent",
+    "gnome",
+    "desktop accent",
+    "wallpaper accent",
+    "system accent"
   ],
   "contributes": {
     "themes": [
@@ -59,10 +61,10 @@
           "default": true,
           "description": "Enable or disable inline highlighting for hex, RGB, RGBA, HSL and HSLA color values."
         },
-        "nacre.kdeAccent.enable": {
+        "nacre.systemAccent.enable": {
           "type": "boolean",
           "default": true,
-          "description": "Follow the active KDE Plasma accent color in Nacre workbench UI colors on Linux. This writes theme-scoped workbench color customizations to your user settings."
+          "description": "Automatically tint Nacre workbench surfaces and accents using the current GNOME or KDE desktop accent on Linux. Disable to keep the neutral Nacre palette."
         }
       }
     }
