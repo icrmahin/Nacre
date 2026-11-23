@@ -79,7 +79,7 @@ A single maintained color theme. The previous experimental color variants are no
 
 ### GNOME and KDE system accent integration
 
-On Linux, Nacre can automatically follow the desktop accent exposed by GNOME, KDE Plasma or a compatible Freedesktop appearance portal. GNOME 47+ uses its GSettings accent preference, while KDE prefers the appearance portal and falls back to `kdeglobals`. The integration gently tints workbench surfaces and accent states; the `#0B0C0E` editor canvas and syntax palette remain unchanged. It is enabled by default and can be disabled with `nacre.systemAccent.enable`.
+On Linux, Nacre can automatically follow the desktop accent exposed by GNOME, KDE Plasma or a compatible Freedesktop appearance portal. GNOME 47+ uses its GSettings accent preference, while KDE prefers the appearance portal and falls back to `kdeglobals`. The integration gently tints workbench surfaces and accent states. It also blends just 2.5% of the desktop accent into existing TextMate and semantic syntax colors, keeping Nacre's original token roles and hierarchy. The `#0B0C0E` editor canvas stays neutral. One setting controls both behaviors: `nacre.systemAccent.enable`.
 
 Nacre uses the accent supplied by the desktop. It does not claim to extract a dominant color from wallpaper when the desktop does not expose one. See [`docs/SYSTEM-ACCENT.md`](docs/SYSTEM-ACCENT.md) for sources, fallback behavior and limitations.
 
@@ -123,14 +123,16 @@ Set it to `false` to disable inline color decorations.
 ├── media/                          # preview and extension icon
 ├── releases/                       # VSIX, source archive and release bundle
 ├── scripts/validate.mjs            # local package/asset validator
-├── tests/systemAccent.test.js      # GNOME/KDE parsing and palette tests
+├── tests/systemAccent.test.js      # GNOME/KDE parsing and workbench palette tests
+├── tests/syntaxAccent.test.js       # syntax tinting, contrast and restoration tests
 ├── themes/
 │   ├── nacre-color-theme.json      # workbench and syntax colors
 │   ├── nacre-file-icons.json       # file/folder icon mappings
 │   ├── nacre-product-icons.json    # product icon glyph map
 │   └── nacre-ui-icons.woff2        # bundled product icon font
 ├── extension.js                    # extension lifecycle and feature coordination
-├── systemAccent.js                 # GNOME/KDE detection and adaptive palette derivation
+├── systemAccent.js                 # GNOME/KDE detection and adaptive workbench palette
+├── syntaxAccent.js                 # 2.5% TextMate and semantic syntax tinting
 ├── package.json                    # VS Code extension manifest
 ├── CHANGELOG.md
 └── LICENSE.txt
