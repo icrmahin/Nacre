@@ -86,12 +86,12 @@ const colorTheme = readJson('themes/nacre-color-theme.json');
 if (colorTheme) {
   if (colorTheme.name !== 'Nacre') fail('Color theme JSON name is not Nacre');
   else pass('Color theme JSON name is Nacre');
-  if (colorTheme.colors?.['editor.background'] !== '#121212') {
-    fail(`Editor background should be #121212, found ${colorTheme.colors?.['editor.background']}`);
-  } else pass('Editor background is #121212');
-  if (colorTheme.colors?.['sideBar.background'] !== '#242527') {
-    fail(`Sidebar background should be #242527, found ${colorTheme.colors?.['sideBar.background']}`);
-  } else pass('Sidebar background is #242527');
+  if (colorTheme.colors?.['editor.background'] !== '#0B0C0E') {
+    fail(`Editor background should be #0B0C0E, found ${colorTheme.colors?.['editor.background']}`);
+  } else pass('Near-black editor background is #0B0C0E');
+  if (colorTheme.colors?.['sideBar.background'] !== '#111214') {
+    fail(`Sidebar background should be #111214, found ${colorTheme.colors?.['sideBar.background']}`);
+  } else pass('Graphite sidebar background is #111214');
 }
 
 if (failures.length) {
