@@ -29,8 +29,8 @@ function contrast(first, second) {
 
 test('tints syntax colors by a restrained 20% toward the desktop accent', () => {
     assert.equal(TINT_RATIO, 0.20);
-    assert.equal(tintHexColor('#E6EDF3', '#F16B52'), '#CAC8E1');
-    assert.equal(tintHexColor('#A5D6FF', '#3584E4'), '#8CC8FB');
+    assert.equal(tintHexColor('#E6EDF3', '#F16B52'), '#E8D3D3');
+    assert.equal(tintHexColor('#A5D6FF', '#3584E4'), '#8FC6FA');
     assert.equal(tintHexColor('#fff', '#000'), '#CCCCCC');
 });
 
