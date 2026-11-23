@@ -51,14 +51,14 @@ test('prefers KDE AccentColor and falls back to the selection color', () => {
         '',
         '[Colors:Selection]',
         'BackgroundNormal=255,0,0',
-    ].join('\\n');
+    ].join('\n');
     const fallback = [
         '[General]',
         'ColorScheme=BreezeDark',
         '',
         '[Colors:Selection]',
         'BackgroundNormal=255, 0, 0',
-    ].join('\\n');
+    ].join('\n');
     assert.equal(parseKdeGlobals(explicit), '#3DAEE9');
     assert.equal(parseKdeGlobals(fallback), '#FF0000');
 });
