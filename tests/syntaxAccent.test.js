@@ -125,7 +125,7 @@ test('adds semantic tint rules without replacing user rules and restores only un
 
     const changed = { function: { foreground: '#0000EE' } };
     const updated = mergeSemanticRules(first.rules, changed, first.applied);
-    assert.deepEqual(updated.rules, changed);
+    assert.deepEqual(updated.rules, { function: changed.function, keyword: userRule });
     assert.deepEqual(restoreSemanticRules(updated.rules, updated.applied), { keyword: userRule });
 
     const userEditedRule = { function: { foreground: '#00FFFF' } };
