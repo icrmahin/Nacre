@@ -109,6 +109,30 @@ if (pkg) {
     }
   }
 
+  const expectedAccents = {
+    mocha: '#cba6f7', grove: '#a7c080', ember: '#fe8019',
+    tide: '#7e9cd8', abyss: '#80cbc4', nocturne: '#719cd6', jade: '#2dd5b7',
+  };
+  for (const [slug, accent] of Object.entries(expectedAccents)) {
+    const fileRoot = path.join(root, 'icons/build', slug, 'files');
+    const folderRoot = path.join(root, 'icons/build', slug, 'folders');
+    const scan = directory => {
+      let contents = '';
+      for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+        const fullPath = path.join(directory, entry.name);
+        if (entry.isDirectory()) contents += scan(fullPath);
+        else if (entry.isFile() && entry.name.endsWith('.svg')) contents += fs.readFileSync(fullPath, 'utf8').toLowerCase();
+      }
+      return contents;
+    };
+    if (!exists(path.relative(root, fileRoot)) || !exists(path.relative(root, folderRoot))) {
+      fail('Missing generated icon assets for ' + slug);
+      continue;
+    }
+    if (!scan(fileRoot).includes(accent)) fail(slug + ': file SVGs do not use their flavor accent');
+    if (!scan(folderRoot).includes(accent)) fail(slug + ': folder SVGs do not use their flavor accent');
+  }
+
   const productIconThemes = pkg.contributes?.productIconThemes ?? [];
   if (productIconThemes.length !== 1 ||
       productIconThemes[0].id !== 'nacre-product-icons' ||
