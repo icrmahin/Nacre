@@ -21,6 +21,8 @@ Choose a color theme with **Preferences: Color Theme** in the VS Code Command Pa
 
 The seven flavors are Nacre palette adaptations. They retain Nacre's language-scope coverage while using their own workbench, TextMate and semantic color palettes. They are not copies of the upstream extensions or their implementation code. See [third-party palette credits](THIRD-PARTY-THEMES.md).
 
+Across all seven flavors, normal VS Code interface text and the editor's base foreground use one consistent neutral white (`#E6E9EF`). Selected text in lists, tabs, menus and editor selections uses the same foreground for readable contrast. Flavor-specific colors remain in syntax highlighting, links, interactive accents and matching icons.
+
 ## Matching file icon themes
 
 Each color flavor has a matching file icon theme with its own accent palette:
