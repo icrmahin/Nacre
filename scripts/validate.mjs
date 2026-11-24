@@ -93,7 +93,7 @@ if (pkg) {
     ['breadcrumb.activeSelectionForeground', 'breadcrumb.activeSelectionBackground'],
   ];
   for (const entry of themes.slice(1)) {
-    const relative = entry.path?.replace(/^\\.\\//, '');
+    const relative = entry.path?.replace(/^\.\//, '');
     const theme = relative ? readJson(relative) : null;
     if (!theme) continue;
     for (const key of uiTextKeys) {
