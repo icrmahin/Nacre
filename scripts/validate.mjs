@@ -68,6 +68,49 @@ if (pkg) {
     }
   }
 
+
+  const uiTextKeys = [
+    'foreground', 'disabledForeground', 'descriptionForeground',
+    'sideBar.foreground', 'sideBarTitle.foreground',
+    'activityBar.foreground', 'activityBar.inactiveForeground',
+    'tab.activeForeground', 'tab.inactiveForeground', 'tab.unfocusedActiveForeground',
+    'panelTitle.activeForeground', 'panelTitle.inactiveForeground',
+    'editor.foreground', 'editorLineNumber.foreground', 'editorLineNumber.activeForeground',
+    'input.foreground', 'quickInput.foreground', 'menu.foreground',
+    'list.activeSelectionForeground', 'list.inactiveSelectionForeground', 'list.focusForeground',
+    'list.activeSelectionIconForeground', 'list.inactiveSelectionIconForeground',
+    'editor.selectionForeground', 'breadcrumb.foreground', 'breadcrumb.focusForeground',
+    'breadcrumb.activeSelectionForeground', 'menu.selectionForeground', 'menubar.selectionForeground',
+    'titleBar.activeForeground', 'titleBar.inactiveForeground',
+    'settings.headerForeground', 'commandCenter.foreground', 'commandCenter.activeForeground',
+  ];
+  const selectionPairs = [
+    ['list.activeSelectionForeground', 'list.activeSelectionBackground'],
+    ['list.inactiveSelectionForeground', 'list.inactiveSelectionBackground'],
+    ['editor.selectionForeground', 'editor.selectionBackground'],
+    ['menu.selectionForeground', 'menu.selectionBackground'],
+    ['menubar.selectionForeground', 'menubar.selectionBackground'],
+    ['breadcrumb.activeSelectionForeground', 'breadcrumb.activeSelectionBackground'],
+  ];
+  for (const entry of themes.slice(1)) {
+    const relative = entry.path?.replace(/^\\.\\//, '');
+    const theme = relative ? readJson(relative) : null;
+    if (!theme) continue;
+    for (const key of uiTextKeys) {
+      if (theme.colors?.[key] !== '#E6E9EF') {
+        fail(entry.label + ': expected neutral #E6E9EF text for ' + key + ', found ' + theme.colors?.[key]);
+      }
+    }
+    for (const [foregroundKey, backgroundKey] of selectionPairs) {
+      const foreground = theme.colors?.[foregroundKey];
+      const background = theme.colors?.[backgroundKey];
+      if (foreground && background && foreground.toLowerCase() === background.toLowerCase()) {
+        fail(entry.label + ': selected text is invisible for ' + foregroundKey);
+      }
+    }
+  }
+  pass('All seven flavor themes use one neutral text color with readable selection states');
+
   const iconThemes = pkg.contributes?.iconThemes ?? [];
   const actualShape = iconThemes.map(({ id, label, path }) => ({ id, label, path }));
   const expectedShape = expectedIconThemes.map(({ id, label, path }) => ({ id, label, path }));
