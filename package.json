@@ -37,6 +37,41 @@
         "label": "Nacre",
         "uiTheme": "vs-dark",
         "path": "./themes/nacre-color-theme.json"
+      },
+      {
+        "label": "Nacre / Catppuccin Mocha",
+        "uiTheme": "vs-dark",
+        "path": "./themes/nacre-catppuccin-mocha-color-theme.json"
+      },
+      {
+        "label": "Nacre / Everforest Dark",
+        "uiTheme": "vs-dark",
+        "path": "./themes/nacre-everforest-color-theme.json"
+      },
+      {
+        "label": "Nacre / Gruvbox Dark Medium",
+        "uiTheme": "vs-dark",
+        "path": "./themes/nacre-gruvbox-dark-medium-color-theme.json"
+      },
+      {
+        "label": "Nacre / Kanagawa Wave",
+        "uiTheme": "vs-dark",
+        "path": "./themes/nacre-kanagawa-wave-color-theme.json"
+      },
+      {
+        "label": "Nacre / Material Ocean",
+        "uiTheme": "vs-dark",
+        "path": "./themes/nacre-material-ocean-color-theme.json"
+      },
+      {
+        "label": "Nacre / Nightfox",
+        "uiTheme": "vs-dark",
+        "path": "./themes/nacre-nightfox-color-theme.json"
+      },
+      {
+        "label": "Nacre / Osaka Jade",
+        "uiTheme": "vs-dark",
+        "path": "./themes/nacre-osaka-jade-color-theme.json"
       }
     ],
     "iconThemes": [
@@ -64,11 +99,7 @@
         "nacre.systemAccent.enable": {
           "type": "boolean",
           "default": true,
-
-          "description": "Automatically tint Nacre workbench surfaces and syntax colors using the current GNOME or KDE desktop accent on Linux. Syntax colors receive a restrained 10% blend. Disable to restore the original Nacre palette."
-
-          "description": "Automatically tint Nacre workbench surfaces and syntax colors using the current GNOME or KDE desktop accent on Linux. Syntax colors receive a visible but restrained 20% blend. Disable to restore the original Nacre palette."
-
+          "description": "Automatically tint workbench and syntax colors only when the main Nacre theme is active. The seven alternative palette themes keep their own fixed colors. Syntax colors use a visible but restrained 20% blend. Disable to restore the original Nacre palette."
         }
       }
     }
