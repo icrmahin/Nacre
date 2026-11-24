@@ -1,7 +1,7 @@
 {
   "name": "nacre",
-  "displayName": "Nacre — Premium Dark Theme",
-  "description": "A refined near-black Visual Studio Code theme with automatic GNOME and KDE accent integration, subtly adaptive syntax colors, custom file icons and product UI icons.",
+  "displayName": "Nacre — Dark Theme Collection",
+  "description": "Nacre is a premium dark VS Code theme collection with seven independent palette flavors and manually selectable matching file icon themes, plus optional desktop-accent tinting for the main Nacre theme.",
   "version": "1.0.2",
   "publisher": "icrmahin",
   "author": "ICRMAHIN",
@@ -29,7 +29,15 @@
     "gnome",
     "desktop accent",
     "wallpaper accent",
-    "system accent"
+    "system accent",
+    "catppuccin",
+    "everforest",
+    "gruvbox",
+    "kanagawa",
+    "material theme",
+    "nightfox",
+    "osaka jade",
+    "color theme pack"
   ],
   "contributes": {
     "themes": [
@@ -37,13 +45,83 @@
         "label": "Nacre",
         "uiTheme": "vs-dark",
         "path": "./themes/nacre-color-theme.json"
+      },
+      {
+        "label": "Nacre Mocha",
+        "uiTheme": "vs-dark",
+        "path": "./themes/nacre-catppuccin-mocha-color-theme.json"
+      },
+      {
+        "label": "Nacre Grove",
+        "uiTheme": "vs-dark",
+        "path": "./themes/nacre-everforest-color-theme.json"
+      },
+      {
+        "label": "Nacre Ember",
+        "uiTheme": "vs-dark",
+        "path": "./themes/nacre-gruvbox-dark-medium-color-theme.json"
+      },
+      {
+        "label": "Nacre Tide",
+        "uiTheme": "vs-dark",
+        "path": "./themes/nacre-kanagawa-wave-color-theme.json"
+      },
+      {
+        "label": "Nacre Abyss",
+        "uiTheme": "vs-dark",
+        "path": "./themes/nacre-material-ocean-color-theme.json"
+      },
+      {
+        "label": "Nacre Nocturne",
+        "uiTheme": "vs-dark",
+        "path": "./themes/nacre-nightfox-color-theme.json"
+      },
+      {
+        "label": "Nacre Jade",
+        "uiTheme": "vs-dark",
+        "path": "./themes/nacre-osaka-jade-color-theme.json"
       }
     ],
     "iconThemes": [
       {
         "id": "nacre-file-icons",
         "label": "Nacre File Icons",
-        "path": "./themes/nacre-file-icons.json"
+        "path": "./themes/nacre-main-file-icons.json"
+      },
+      {
+        "id": "nacre-mocha-icons",
+        "label": "Nacre Mocha Icons",
+        "path": "./themes/nacre-mocha-file-icons.json"
+      },
+      {
+        "id": "nacre-grove-icons",
+        "label": "Nacre Grove Icons",
+        "path": "./themes/nacre-grove-file-icons.json"
+      },
+      {
+        "id": "nacre-ember-icons",
+        "label": "Nacre Ember Icons",
+        "path": "./themes/nacre-ember-file-icons.json"
+      },
+      {
+        "id": "nacre-tide-icons",
+        "label": "Nacre Tide Icons",
+        "path": "./themes/nacre-tide-file-icons.json"
+      },
+      {
+        "id": "nacre-abyss-icons",
+        "label": "Nacre Abyss Icons",
+        "path": "./themes/nacre-abyss-file-icons.json"
+      },
+      {
+        "id": "nacre-nocturne-icons",
+        "label": "Nacre Nocturne Icons",
+        "path": "./themes/nacre-nocturne-file-icons.json"
+      },
+      {
+        "id": "nacre-jade-icons",
+        "label": "Nacre Jade Icons",
+        "path": "./themes/nacre-jade-file-icons.json"
       }
     ],
     "productIconThemes": [
@@ -64,11 +142,7 @@
         "nacre.systemAccent.enable": {
           "type": "boolean",
           "default": true,
-
-          "description": "Automatically tint Nacre workbench surfaces and syntax colors using the current GNOME or KDE desktop accent on Linux. Syntax colors receive a restrained 10% blend. Disable to restore the original Nacre palette."
-
-          "description": "Automatically tint Nacre workbench surfaces and syntax colors using the current GNOME or KDE desktop accent on Linux. Syntax colors receive a visible but restrained 20% blend. Disable to restore the original Nacre palette."
-
+          "description": "Automatically tint workbench and syntax colors only when the main Nacre theme is active. The seven alternative palette themes keep their own fixed colors. Syntax colors use a visible but restrained 20% blend. Disable to restore the original Nacre palette."
         }
       }
     }
@@ -83,7 +157,11 @@
     "url": "https://github.com/icrmahin/Nacre/issues"
   },
   "scripts": {
+    "build:icons": "node scripts/build-icon-themes.mjs",
+    "prevalidate": "npm run build:icons",
     "validate": "node scripts/validate.mjs",
-    "test": "node --test"
+    "pretest": "npm run build:icons",
+    "test": "node --test",
+    "vscode:prepublish": "npm run build:icons"
   }
 }
