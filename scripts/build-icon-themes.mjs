@@ -126,7 +126,6 @@ for (const flavor of flavors) {
     '#292d32': folderAccent,
     '#747c84': accentLight,
     '#8b9299': flavor.accent,
-    '#8b9299': flavor.accent,
     '#4a5057': folderAccent,
     '#f16b52': flavor.accent,
     '#ff896f': accentLight,
