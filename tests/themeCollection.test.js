@@ -97,15 +97,41 @@ test('each flavor icon theme references its own generated file and folder SVG as
     }
 });
 
-test('main Nacre folder artwork is neutral graphite rather than blue or orange', () => {
-    const artwork = fs.readFileSync(
-        path.join(root, 'icons/build/main/folders/nacre-folder.svg'),
-        'utf8',
-    ).toLowerCase();
-    assert.ok(artwork.includes('#17191c'));
-    assert.ok(!artwork.includes('#7897ba'));
-    assert.ok(!artwork.includes('#aee33e'));
-    assert.ok(!artwork.includes('#f16b52'));
+test('all main Nacre folder artwork uses neutral graphite default folder colors', () => {
+    const folderRoot = path.join(root, 'icons/build/main/folders');
+    const files = [];
+    const visit = directory => {
+        for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+            const fullPath = path.join(directory, entry.name);
+            if (entry.isDirectory()) visit(fullPath);
+            else if (entry.isFile() && entry.name.endsWith('.svg')) files.push(fullPath);
+        }
+    };
+    visit(folderRoot);
+    assert.ok(files.length > 100);
+    const forbiddenDefaultColors = ['#7897ba', '#8ca9cc', '#aee33e', '#f16b52', '#ff896f'];
+    for (const file of files) {
+        const artwork = fs.readFileSync(file, 'utf8').toLowerCase();
+        for (const color of forbiddenDefaultColors) {
+            assert.ok(!artwork.includes(color), file + ' still contains ' + color);
+        }
+    }
+    const defaultFolder = fs.readFileSync(path.join(folderRoot, 'nacre-folder.svg'), 'utf8').toLowerCase();
+    assert.ok(defaultFolder.includes('#17191c'));
+});
+
+test('each flavor has its own accent on Nacre folder artwork', () => {
+    const flavors = {
+        mocha: '#cba6f7', grove: '#a7c080', ember: '#fe8019',
+        tide: '#7e9cd8', abyss: '#80cbc4', nocturne: '#719cd6', jade: '#2dd5b7',
+    };
+    for (const [slug, accent] of Object.entries(flavors)) {
+        const artwork = fs.readFileSync(
+            path.join(root, 'icons/build', slug, 'folders/nacre-folder.svg'),
+            'utf8',
+        ).toLowerCase();
+        assert.ok(artwork.includes(accent), slug + ' folder artwork is missing its flavor accent');
+    }
 });
 
 test('original Nacre editor, sidebar and main theme identity remain unchanged', () => {
