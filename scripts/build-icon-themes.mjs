@@ -93,14 +93,14 @@ function rewriteIconPaths(iconTheme, flavorSlug) {
 }
 
 const neutralFolderColors = {
-  '#7897ba': '#555B62',
-  '#aee33e': '#AEB6B5',
+  '#7897ba': '#292D32',
+  '#aee33e': '#747C84',
   '#24272c': '#17191C',
   '#30343a': '#202327',
   '#78818d': '#4A5057',
   '#aeb6b5': '#747C84',
   '#f16b52': '#8B9299',
-  '#ff896f': '#AEB6B5',
+  '#ff896f': '#747C84',
 };
 
 const baseIconTheme = readJson(sourceIconThemePath);
@@ -123,9 +123,9 @@ for (const flavor of flavors) {
   const folderAccent = mix(flavor.accent, '#17191C', 0.28);
   const accentLight = mix(flavor.accent, '#FFFFFF', 0.2);
   const folderColorMap = {
-    '#555b62': folderAccent,
-    '#aeb6b5': accentLight,
-    '#747c84': flavor.accent,
+    '#292d32': folderAccent,
+    '#747c84': accentLight,
+    '#8b9299': flavor.accent,
     '#8b9299': flavor.accent,
     '#4a5057': folderAccent,
     '#f16b52': flavor.accent,
