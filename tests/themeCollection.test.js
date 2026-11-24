@@ -44,6 +44,90 @@ test('each registered color theme has an independent valid dark theme file', () 
     }
 });
 
+
+test('all seven flavor themes use one neutral white for normal UI and editor text', () => {
+    const textKeys = [
+        'foreground',
+        'disabledForeground',
+        'descriptionForeground',
+        'sideBar.foreground',
+        'sideBarTitle.foreground',
+        'activityBar.foreground',
+        'activityBar.inactiveForeground',
+        'tab.activeForeground',
+        'tab.inactiveForeground',
+        'tab.unfocusedActiveForeground',
+        'panelTitle.activeForeground',
+        'panelTitle.inactiveForeground',
+        'editor.foreground',
+        'editorLineNumber.foreground',
+        'editorLineNumber.activeForeground',
+        'input.foreground',
+        'quickInput.foreground',
+        'menu.foreground',
+        'list.activeSelectionForeground',
+        'list.inactiveSelectionForeground',
+        'list.focusForeground',
+        'list.activeSelectionIconForeground',
+        'list.inactiveSelectionIconForeground',
+        'editor.selectionForeground',
+        'breadcrumb.foreground',
+        'breadcrumb.focusForeground',
+        'breadcrumb.activeSelectionForeground',
+        'menu.selectionForeground',
+        'menubar.selectionForeground',
+        'titleBar.activeForeground',
+        'titleBar.inactiveForeground',
+        'settings.headerForeground',
+        'commandCenter.foreground',
+        'commandCenter.activeForeground',
+    ];
+    const expected = '#E6E9EF';
+
+    for (const contribution of pkg.contributes.themes.slice(1)) {
+        const theme = JSON.parse(fs.readFileSync(
+            path.join(root, contribution.path.replace(/^\.\//, '')),
+            'utf8',
+        ));
+        for (const key of textKeys) {
+            assert.equal(
+                theme.colors[key],
+                expected,
+                contribution.label + ' has an inconsistent text color for ' + key,
+            );
+        }
+    }
+});
+
+test('selected text foregrounds never reuse the corresponding selection background', () => {
+    const pairs = [
+        ['list.activeSelectionForeground', 'list.activeSelectionBackground'],
+        ['list.inactiveSelectionForeground', 'list.inactiveSelectionBackground'],
+        ['editor.selectionForeground', 'editor.selectionBackground'],
+        ['menu.selectionForeground', 'menu.selectionBackground'],
+        ['menubar.selectionForeground', 'menubar.selectionBackground'],
+        ['breadcrumb.activeSelectionForeground', 'breadcrumb.activeSelectionBackground'],
+    ];
+
+    for (const contribution of pkg.contributes.themes.slice(1)) {
+        const theme = JSON.parse(fs.readFileSync(
+            path.join(root, contribution.path.replace(/^\.\//, '')),
+            'utf8',
+        ));
+        for (const [foregroundKey, backgroundKey] of pairs) {
+            const foreground = theme.colors[foregroundKey];
+            const background = theme.colors[backgroundKey];
+            if (foreground && background) {
+                assert.notEqual(
+                    foreground.toLowerCase(),
+                    background.toLowerCase(),
+                    contribution.label + ' has invisible selected text in ' + foregroundKey,
+                );
+            }
+        }
+    }
+});
+
 test('all eight color themes use distinct editor backgrounds', () => {
     const backgrounds = pkg.contributes.themes.map(contribution => {
         const theme = JSON.parse(fs.readFileSync(
