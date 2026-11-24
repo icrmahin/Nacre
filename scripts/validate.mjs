@@ -16,6 +16,18 @@ const readJson = (relativePath) => {
   }
 };
 const exists = (relativePath) => fs.existsSync(path.join(root, relativePath));
+
+const expectedThemeLabels = [
+  'Nacre',
+  'Nacre / Catppuccin Mocha',
+  'Nacre / Everforest Dark',
+  'Nacre / Gruvbox Dark Medium',
+  'Nacre / Kanagawa Wave',
+  'Nacre / Material Ocean',
+  'Nacre / Nightfox',
+  'Nacre / Osaka Jade',
+];
+
 const pkg = readJson('package.json');
 
 if (pkg) {
@@ -23,16 +35,44 @@ if (pkg) {
   else pass('Package name is nacre');
   if (pkg.publisher !== 'icrmahin') fail(`Expected publisher "icrmahin", found "${pkg.publisher}"`);
   else pass('Publisher is icrmahin');
-  if (!/^\d+\.\d+\.\d+$/.test(pkg.version ?? '')) fail(`Expected a valid semantic version, found "${pkg.version}"`);
-  else pass(`Package version is ${pkg.version}`);
+  if (!/^\d+\.\d+\.\d+$/.test(pkg.version ?? '')) {
+    fail(`Expected a valid semantic version, found "${pkg.version}"`);
+  } else pass(`Package version is ${pkg.version}`);
 
   const themes = pkg.contributes?.themes ?? [];
-  if (themes.length !== 1 || themes[0]?.label !== 'Nacre') {
-    fail(`Expected exactly one color theme named Nacre; found ${themes.length}`);
-  } else pass('Exactly one color theme is contributed: Nacre');
+  const actualLabels = themes.map((theme) => theme.label);
+  if (JSON.stringify(actualLabels) !== JSON.stringify(expectedThemeLabels)) {
+    fail(`Expected the main Nacre theme followed by seven named palette themes; found: ${actualLabels.join(', ')}`);
+  } else pass('All eight color themes are registered in the expected order');
+
+  if (new Set(actualLabels).size !== actualLabels.length) {
+    fail('Color theme labels must be unique');
+  } else pass('Color theme labels are unique');
+
+  for (const entry of themes) {
+    const relative = entry.path?.replace(/^\.\//, '');
+    if (!relative || !exists(relative)) {
+      fail(`Color theme contribution path missing: ${entry.path}`);
+      continue;
+    }
+
+    const theme = readJson(relative);
+    if (!theme) continue;
+    if (theme.name !== entry.label) {
+      fail(`${relative}: theme name "${theme.name}" does not match manifest label "${entry.label}"`);
+    } else pass(`Theme JSON matches manifest label: ${entry.label}`);
+
+    if (theme.type !== 'dark') fail(`${relative}: expected a dark theme`);
+    if (!theme.colors?.['editor.background']) fail(`${relative}: editor.background is missing`);
+    if (!Array.isArray(theme.tokenColors) || theme.tokenColors.length < 100) {
+      fail(`${relative}: expected the full Nacre TextMate scope set`);
+    }
+    if (!theme.semanticTokenColors || Object.keys(theme.semanticTokenColors).length < 20) {
+      fail(`${relative}: semantic token colors are missing or incomplete`);
+    }
+  }
 
   for (const [kind, entries] of Object.entries({
-    color: themes,
     fileIcon: pkg.contributes?.iconThemes ?? [],
     productIcon: pkg.contributes?.productIconThemes ?? [],
   })) {
@@ -43,6 +83,11 @@ if (pkg) {
       if (relative?.endsWith('.json')) readJson(relative);
     }
   }
+
+  const accentSetting = pkg.contributes?.configuration?.properties?.['nacre.systemAccent.enable'];
+  if (accentSetting?.default !== true) {
+    fail('nacre.systemAccent.enable must remain enabled by default');
+  } else pass('System accent integration remains enabled by default');
 }
 
 const fileIcons = readJson('themes/nacre-file-icons.json');
@@ -84,15 +129,26 @@ if (productIcons) {
 
 const colorTheme = readJson('themes/nacre-color-theme.json');
 if (colorTheme) {
-  if (colorTheme.name !== 'Nacre') fail('Color theme JSON name is not Nacre');
-  else pass('Color theme JSON name is Nacre');
+  if (colorTheme.name !== 'Nacre') fail('Original color theme JSON name is not Nacre');
+  else pass('Original Nacre theme name is preserved');
   if (colorTheme.colors?.['editor.background'] !== '#0B0C0E') {
-    fail(`Editor background should be #0B0C0E, found ${colorTheme.colors?.['editor.background']}`);
-  } else pass('Near-black editor background is #0B0C0E');
+    fail(`Original Nacre editor background should be #0B0C0E, found ${colorTheme.colors?.['editor.background']}`);
+  } else pass('Original Nacre editor background is preserved');
   if (colorTheme.colors?.['sideBar.background'] !== '#111214') {
-    fail(`Sidebar background should be #111214, found ${colorTheme.colors?.['sideBar.background']}`);
-  } else pass('Graphite sidebar background is #111214');
+    fail(`Original Nacre sidebar background should be #111214, found ${colorTheme.colors?.['sideBar.background']}`);
+  } else pass('Original Nacre sidebar background is preserved');
 }
+
+const extensionSource = fs.readFileSync(path.join(root, 'extension.js'), 'utf8');
+if (/get\('colorTheme'\)\s*===\s*'Nacre'/.test(extensionSource)) {
+  pass('Desktop accent synchronization is limited to the original Nacre theme');
+} else {
+  fail('Desktop accent synchronization must remain gated to the original Nacre theme only');
+}
+
+const thirdPartyAttribution = 'THIRD-PARTY-THEMES.md';
+if (exists(thirdPartyAttribution)) pass('Third-party palette attribution file exists');
+else fail('Missing third-party palette attribution file');
 
 if (failures.length) {
   console.error(`\n${failures.length} validation issue(s):`);
