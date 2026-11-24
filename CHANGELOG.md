@@ -8,6 +8,7 @@
 - Added seven matching, independently selectable file icon themes with flavor-specific accents.
 - Kept color-theme and file-icon selection manual and independent; no setting is switched automatically.
 - Kept desktop-accent tinting exclusive to the exact active color theme name Nacre.
+- Unified normal VS Code UI and editor base text across all seven flavors to the same neutral white (`#E6E9EF`), fixing selected-row, tab and menu text contrast.
 
 ## 1.0.1 — KDE Plasma accent integration
 
