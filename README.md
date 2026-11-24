@@ -45,7 +45,7 @@ To pair them, open the Command Palette and run:
 1. **Preferences: Color Theme** → choose a Nacre flavor
 2. **Preferences: File Icon Theme** → choose its matching Nacre icon theme
 
-The original Nacre file glyphs remain untouched, while its folder artwork uses neutral graphite tones that sit closer to Nacre's dark workbench. Each flavor icon theme applies that flavor's accent system across its file glyphs and folder artwork, keeping light/dark details for legibility. The underlying glyph silhouettes and file/folder associations remain consistent across flavors.
+The original Nacre file glyphs remain untouched. Its complete folder icon set uses neutral grayscale, including the small symbols embedded in named folders, and the default folder body is a visible medium gray rather than near-black. Each flavor icon theme recolors folder bodies and embedded sub-icons with that flavor's accent palette, while preserving light/dark contrast, glyph silhouettes and file/folder associations.
 
 ## Product icons
 
@@ -87,7 +87,7 @@ Toggle this feature with the setting nacre.colorHighlight.enable.
 
 Search for **Nacre** by publisher **icrmahin** in the VS Code Extensions view.
 
-The Marketplace listing remains the published distribution channel. Version 1.0.2 is being prepared with the additional color and file icon themes; until its official release is published, use the GitHub test-build workflow for local testing.
+The Visual Studio Marketplace listing is updated separately by the publisher. For local installation of the current source version, use **Actions → Build Nacre Test VSIX (No Release)** and install the generated VSIX. That workflow packages the extension for testing and does not publish it to the Marketplace.
 
 ## Build and validate
 
