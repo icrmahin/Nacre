@@ -153,12 +153,24 @@ if (colorTheme) {
   else pass('Original Nacre sidebar background is preserved');
 }
 
-const mainFolderArtwork = 'icons/build/main/folders/nacre-folder.svg';
-if (exists(mainFolderArtwork)) {
-  const svg = fs.readFileSync(path.join(root, mainFolderArtwork), 'utf8').toLowerCase();
-  if (svg.includes('#7897ba') || svg.includes('#aee33e') || svg.includes('#f16b52')) {
-    fail('Main Nacre folder artwork still contains blue, lime or orange accent colors');
-  } else pass('Main Nacre folder artwork uses a neutral graphite palette');
+const mainFolderRoot = path.join(root, 'icons/build/main/folders');
+if (exists('icons/build/main/folders/nacre-folder.svg')) {
+  const svgFiles = [];
+  const collectSvgFiles = directory => {
+    for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+      const fullPath = path.join(directory, entry.name);
+      if (entry.isDirectory()) collectSvgFiles(fullPath);
+      else if (entry.isFile() && entry.name.endsWith('.svg')) svgFiles.push(fullPath);
+    }
+  };
+  collectSvgFiles(mainFolderRoot);
+  const defaultBluePalette = ['#7897ba', '#8ca9cc', '#aee33e', '#f16b52', '#ff896f'];
+  const offenders = svgFiles.filter(file => {
+    const svg = fs.readFileSync(file, 'utf8').toLowerCase();
+    return defaultBluePalette.some(color => svg.includes(color));
+  });
+  if (offenders.length) fail('Main Nacre folder artwork still contains default blue/lime/orange palette colors: ' + offenders.length + ' SVG(s)');
+  else pass('All main Nacre folder artwork uses neutralized default folder colors');
 } else fail('Generated neutral Nacre folder artwork is missing');
 
 const extensionSource = fs.readFileSync(path.join(root, 'extension.js'), 'utf8');
