@@ -1,12 +1,13 @@
 # Changelog
 
-## 1.0.2 — Theme collection and adaptive Nacre accent
+## 1.0.2 — Independent palette and icon flavors
 
-- Preserved the original Nacre theme, its workbench colors, syntax palette, file icons and product icons.
-- Added seven independent fixed-color palettes: Catppuccin Mocha, Everforest Dark, Gruvbox Dark Medium, Kanagawa Wave, Material Ocean, Nightfox and Osaka Jade.
-- Kept desktop-accent tinting exclusive to the original Nacre theme.
-- Added a 20% wallpaper-responsive blend for Nacre TextMate and semantic syntax colors, with a minimum 4.5:1 contrast target.
-- Added validation for all eight themes and tests for theme registration and accent-isolation behavior.
+- Preserved the original Nacre editor, workbench, syntax palette, product icons and desktop-accent behavior.
+- Updated the main Nacre folder artwork to neutral graphite tones that blend with the dark workbench.
+- Added seven independently selectable color flavors: Nacre Mocha, Grove, Ember, Tide, Abyss, Nocturne and Jade.
+- Added seven matching, independently selectable file icon themes with flavor-specific accents.
+- Kept color-theme and file-icon selection manual and independent; no setting is switched automatically.
+- Kept desktop-accent tinting exclusive to the exact active color theme name Nacre.
 
 ## 1.0.1 — KDE Plasma accent integration
 
