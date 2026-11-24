@@ -43,7 +43,7 @@ To pair them, open the Command Palette and run:
 1. **Preferences: Color Theme** → choose a Nacre flavor
 2. **Preferences: File Icon Theme** → choose its matching Nacre icon theme
 
-The original Nacre file and folder artwork uses a neutral graphite palette that sits closer to Nacre's dark workbench. Flavor icon themes recolor Nacre's accent details and folder artwork to match their corresponding palette. The file glyph artwork and file associations remain consistent across flavors.
+The original Nacre file glyphs remain untouched, while its folder artwork uses neutral graphite tones that sit closer to Nacre's dark workbench. Each flavor icon theme applies that flavor's accent system across its file glyphs and folder artwork, keeping light/dark details for legibility. The underlying glyph silhouettes and file/folder associations remain consistent across flavors.
 
 ## Product icons
 
