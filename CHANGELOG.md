@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.3 — Grayscale Nacre folders and flavor-matched sub-icons
+
+- Reworked the original Nacre folder icon set to use neutral grayscale throughout, including embedded folder-type marks.
+- Lifted the original folder body from near-black to a visible medium gray for clearer contrast on Nacre's dark workbench.
+- Recolored embedded folder sub-icons in each flavor to that flavor's own accent palette; removed the leftover blue code badge.
+- Preserved all file glyphs, icon silhouettes, file/folder associations, manual icon-theme selection and product icons.
+- Kept the seven flavor text-contrast fixes and the original Nacre color theme unchanged.
+
 ## 1.0.2 — Independent palette and icon flavors
 
 - Preserved the original Nacre editor, workbench, syntax palette, product icons and desktop-accent behavior.

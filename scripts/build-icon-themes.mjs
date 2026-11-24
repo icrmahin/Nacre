@@ -142,16 +142,33 @@ function rewriteIconPaths(iconTheme, flavorSlug) {
 }
 
 const neutralFolderColors = {
-  '#7897ba': '#292D32',
-  '#8ca9cc': '#747C84',
-  '#aee33e': '#747C84',
-  '#24272c': '#17191C',
-  '#30343a': '#202327',
-  '#78818d': '#4A5057',
-  '#aeb6b5': '#747C84',
-  '#f16b52': '#8B9299',
-  '#ff896f': '#747C84',
+  '#7897ba': '#888888',
+  '#8ca9cc': '#A3A3A3',
+  '#aee33e': '#D0D0D0',
+  '#24272c': '#777777',
+  '#303236': '#777777',
+  '#30343a': '#888888',
+  '#78818d': '#A5A5A5',
+  '#aeb6b5': '#D0D0D0',
+  '#4775d1': '#D0D0D0',
+  '#f16b52': '#D0D0D0',
+  '#ff896f': '#D0D0D0',
 };
+
+function neutralizeFolderSvg(svg) {
+  return svg.replace(/#[0-9a-f]{6}\b/gi, (value) => {
+    const lower = value.toLowerCase();
+    if (neutralFolderColors[lower]) return neutralFolderColors[lower];
+
+    const { r, g, b } = hexToRgb(lower);
+    const chroma = Math.max(r, g, b) - Math.min(r, g, b);
+    if (chroma > 3) return '#D0D0D0';
+
+    const gray = Math.round((r + g + b) / 3);
+    const lifted = gray < 96 ? 119 : gray < 144 ? 144 : gray < 196 ? 176 : 208;
+    return '#' + lifted.toString(16).padStart(2, '0').repeat(3);
+  });
+}
 
 const baseIconTheme = readJson(sourceIconThemePath);
 fs.rmSync(buildRoot, { recursive: true, force: true });
@@ -159,7 +176,7 @@ fs.rmSync(buildRoot, { recursive: true, force: true });
 const mainFolderCount = copySvgTree(
   sourceFolderIcons,
   path.join(buildRoot, 'main', 'folders'),
-  svg => transformHexColors(svg, neutralFolderColors),
+  svg => neutralizeFolderSvg(svg),
 );
 
 const mainTheme = structuredClone(baseIconTheme);
@@ -172,14 +189,6 @@ const fileIconCount = walkSvgFiles(sourceFileIcons).length;
 for (const flavor of flavors) {
   const folderAccent = mix(flavor.accent, '#17191C', 0.28);
   const accentLight = mix(flavor.accent, '#FFFFFF', 0.2);
-  const folderColorMap = {
-    '#292d32': folderAccent,
-    '#747c84': accentLight,
-    '#8b9299': flavor.accent,
-    '#4a5057': folderAccent,
-    '#f16b52': flavor.accent,
-    '#ff896f': accentLight,
-  };
   const flavorRoot = path.join(buildRoot, flavor.slug);
   const transformedFiles = copySvgTree(
     sourceFileIcons,
@@ -189,7 +198,7 @@ for (const flavor of flavors) {
   const transformedFolders = copySvgTree(
     path.join(buildRoot, 'main', 'folders'),
     path.join(flavorRoot, 'folders'),
-    svg => transformHexColors(svg, folderColorMap),
+    svg => recolorFileSvg(svg, flavor.accent),
   );
 
   const theme = structuredClone(baseIconTheme);

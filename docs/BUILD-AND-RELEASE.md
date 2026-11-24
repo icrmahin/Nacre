@@ -21,7 +21,7 @@ node --check systemAccent.js
 node --check syntaxAccent.js
 ```
 
-npm run build:icons generates the neutral Nacre folder artwork and seven flavor-specific file icon sets from the shared SVG sources. Validation checks the eight color theme registrations, eight independently selectable file icon contributions, all generated SVG paths, product-icon font references, and the rule that desktop-accent synchronization belongs only to the original Nacre theme. The prevalidate and pretest npm hooks run the icon generator automatically. Unit tests cover GNOME/KDE detection, accent parsing, workbench palette generation, syntax tinting, contrast, restoration and variant isolation.
+npm run build:icons generates the neutral Nacre folder artwork and seven flavor-specific file icon sets from the shared SVG sources. Validation checks the eight color theme registrations, eight independently selectable file icon contributions, all generated SVG paths, neutral grayscale across every original Nacre folder SVG, flavor-colored embedded folder sub-icons, product-icon font references, and the rule that desktop-accent synchronization belongs only to the original Nacre theme. The prevalidate and pretest npm hooks run the icon generator automatically. Unit tests cover GNOME/KDE detection, accent parsing, workbench palette generation, syntax tinting, contrast, restoration and variant isolation.
 
 ## Build a local VSIX
 
@@ -51,7 +51,7 @@ The official release workflow is tag-only. It cannot be started with the manual 
 1. Update `CHANGELOG.md` and the package version.
 2. Run the local validation and test commands.
 3. Merge the approved changes into `main`.
-4. Create and push a matching version tag such as `v1.0.2`.
+4. Create and push a matching version tag such as `v1.0.3`.
 5. The release workflow validates that the tag matches `package.json`, packages the VSIX and attaches it to a GitHub Release.
 
 A successful test-artifact build is not an official release and does not publish to the Visual Studio Marketplace.
