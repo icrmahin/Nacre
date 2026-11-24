@@ -1,13 +1,12 @@
 # Attribution and licensing
 
-The extension is packaged and published under the `icrmahin` publisher identity. The included `LICENSE.txt` file is preserved from the supplied source and contains this upstream notice:
+Nacre is packaged and published under the `icrmahin` publisher identity. The included `LICENSE.txt` is retained with its original MIT copyright notice for the supplied base project and icon assets:
 
 ```text
 MIT License
-
 Copyright (c) 2026 nionx01
 ```
 
-The MIT license requires preservation of the copyright and permission notice in copies or substantial portions of the software. This repository therefore retains the supplied `LICENSE.txt` without replacing its copyright holder. The `author` field in `package.json` identifies the extension maintainer/publisher; it does not claim authorship of upstream icon assets whose existing notice is retained.
+The additional color themes are Nacre palette adaptations. They use the theme-scope coverage already in this repository and map those scopes to the named palettes; upstream theme implementation code, extension runtime code, icons and font assets were not copied. The palette sources and their license notices are recorded in [THIRD-PARTY-THEMES.md](../THIRD-PARTY-THEMES.md).
 
-Check all third-party asset provenance and license obligations before making further changes or redistributing individual artwork outside this extension package.
+The author field in `package.json` identifies the extension maintainer/publisher. It does not claim authorship of upstream palettes or assets whose notices are retained.
