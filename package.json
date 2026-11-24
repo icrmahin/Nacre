@@ -1,8 +1,8 @@
 {
   "name": "nacre",
   "displayName": "Nacre — Dark Theme Collection",
-  "description": "Nacre is a premium dark VS Code theme collection with seven independent palette flavors and manually selectable matching file icon themes, plus optional desktop-accent tinting for the main Nacre theme.",
-  "version": "1.0.2",
+  "description": "Nacre is a premium dark VS Code theme collection with seven independent palette flavors and manually selectable matching file icon themes, neutral grayscale folders in the original theme, and optional desktop-accent tinting for Nacre.",
+  "version": "1.0.3",
   "publisher": "icrmahin",
   "author": "ICRMAHIN",
   "icon": "nacre-theme-icon.png",
