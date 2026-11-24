@@ -94,6 +94,7 @@ function rewriteIconPaths(iconTheme, flavorSlug) {
 
 const neutralFolderColors = {
   '#7897ba': '#292D32',
+  '#8ca9cc': '#747C84',
   '#aee33e': '#747C84',
   '#24272c': '#17191C',
   '#30343a': '#202327',
