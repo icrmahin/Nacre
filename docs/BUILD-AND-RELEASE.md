@@ -13,6 +13,7 @@ The extension has no runtime npm dependencies. It uses the VS Code extension API
 Run the same core checks used by GitHub Actions:
 
 ```bash
+npm run build:icons
 npm run validate
 npm test
 node --check extension.js
@@ -20,11 +21,12 @@ node --check systemAccent.js
 node --check syntaxAccent.js
 ```
 
-Validation checks package metadata, all eight color theme registrations and JSON files, icon mappings, SVG paths, product-icon font references, and the rule that desktop-accent synchronization belongs only to the original Nacre theme. Unit tests cover GNOME/KDE detection, accent parsing, workbench palette generation, syntax tinting, contrast, restoration and variant isolation.
+npm run build:icons generates the neutral Nacre folder artwork and seven flavor-specific file icon sets from the shared SVG sources. Validation checks the eight color theme registrations, eight independently selectable file icon contributions, all generated SVG paths, product-icon font references, and the rule that desktop-accent synchronization belongs only to the original Nacre theme. The prevalidate and pretest npm hooks run the icon generator automatically. Unit tests cover GNOME/KDE detection, accent parsing, workbench palette generation, syntax tinting, contrast, restoration and variant isolation.
 
 ## Build a local VSIX
 
 ```bash
+npm run build:icons
 npx --yes @vscode/vsce package --out ./icrmahin.nacre-test.vsix
 ```
 
