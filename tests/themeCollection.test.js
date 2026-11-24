@@ -181,7 +181,7 @@ test('each flavor icon theme references its own generated file and folder SVG as
     }
 });
 
-test('all main Nacre folder artwork uses neutral graphite default folder colors', () => {
+test('all main Nacre folder artwork is grayscale and visible on the dark workbench', () => {
     const folderRoot = path.join(root, 'icons/build/main/folders');
     const files = [];
     const visit = directory => {
@@ -193,28 +193,63 @@ test('all main Nacre folder artwork uses neutral graphite default folder colors'
     };
     visit(folderRoot);
     assert.ok(files.length > 100);
-    const forbiddenDefaultColors = ['#7897ba', '#8ca9cc', '#aee33e', '#f16b52', '#ff896f'];
+
     for (const file of files) {
         const artwork = fs.readFileSync(file, 'utf8').toLowerCase();
-        for (const color of forbiddenDefaultColors) {
-            assert.ok(!artwork.includes(color), file + ' still contains ' + color);
+        const colors = artwork.match(/#[0-9a-f]{6}\b/g) || [];
+        for (const color of colors) {
+            const red = parseInt(color.slice(1, 3), 16);
+            const green = parseInt(color.slice(3, 5), 16);
+            const blue = parseInt(color.slice(5, 7), 16);
+            assert.ok(
+                Math.max(red, green, blue) - Math.min(red, green, blue) <= 1,
+                file + ' still contains a colored folder detail: ' + color,
+            );
         }
     }
+
     const defaultFolder = fs.readFileSync(path.join(folderRoot, 'nacre-folder.svg'), 'utf8').toLowerCase();
-    assert.ok(defaultFolder.includes('#17191c'));
+    assert.ok(defaultFolder.includes('#777777'));
+    assert.ok(!defaultFolder.includes('#17191c'));
+
+    const sourceBadge = fs.readFileSync(
+        path.join(folderRoot, 'filled/folder_src.variant.carbon.svg'),
+        'utf8',
+    ).toLowerCase();
+    assert.ok(sourceBadge.includes('#d0d0d0'));
+    assert.ok(!sourceBadge.includes('#4775d1'));
 });
 
-test('each flavor has its own accent on Nacre folder artwork', () => {
+test('each flavor applies its accent to folder bodies and embedded sub-icons', () => {
     const flavors = {
         mocha: '#cba6f7', grove: '#a7c080', ember: '#fe8019',
         tide: '#7e9cd8', abyss: '#80cbc4', nocturne: '#719cd6', jade: '#2dd5b7',
+    };
+    const mix = (hexA, hexB, amount) => {
+        const a = [1, 3, 5].map(index => parseInt(hexA.slice(index, index + 2), 16));
+        const b = [1, 3, 5].map(index => parseInt(hexB.slice(index, index + 2), 16));
+        return '#' + a.map((value, index) =>
+            Math.round(value + (b[index] - value) * amount).toString(16).padStart(2, '0')
+        ).join('');
     };
     for (const [slug, accent] of Object.entries(flavors)) {
         const artwork = fs.readFileSync(
             path.join(root, 'icons/build', slug, 'folders/nacre-folder.svg'),
             'utf8',
         ).toLowerCase();
-        assert.ok(artwork.includes(accent), slug + ' folder artwork is missing its flavor accent');
+        assert.ok(artwork.includes(accent), slug + ' folder body is missing its flavor accent');
+
+        const sourceBadge = fs.readFileSync(
+            path.join(root, 'icons/build', slug, 'folders/filled/folder_src.variant.carbon.svg'),
+            'utf8',
+        ).toLowerCase();
+        const expectedBadgeAccent = mix(accent, '#ffffff', 0.24);
+        assert.ok(
+            sourceBadge.includes(expectedBadgeAccent),
+            slug + ' source-folder sub-icon is missing its lighter flavor accent',
+        );
+        assert.ok(!sourceBadge.includes('#4775d1'), slug + ' still contains the source blue sub-icon');
+        assert.ok(!sourceBadge.includes('#d0d0d0'), slug + ' still contains an uncolored gray sub-icon');
     }
 });
 
