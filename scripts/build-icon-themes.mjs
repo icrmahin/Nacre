@@ -64,6 +64,55 @@ function mix(hexA, hexB, amount) {
   });
 }
 
+function getAccentShade(luminance, accent) {
+  const light = mix(accent, '#FFFFFF', 0.24);
+  const dark = mix(accent, '#15191B', 0.2);
+  if (luminance >= 0.9) return '#FFFFFF';
+  if (luminance <= 0.1) return '#15191B';
+  if (luminance >= 0.62) return light;
+  if (luminance <= 0.28) return dark;
+  return accent;
+}
+
+function recolorColor(value, accent) {
+  const trimmed = value.trim();
+  const lower = trimmed.toLowerCase();
+  if (['none', 'transparent', 'currentcolor', 'white', 'black'].includes(lower)) return value;
+  if (lower.startsWith('url(')) return value;
+
+  const p3 = lower.match(/^color\(display-p3\s+([0-9.]+)\s+([0-9.]+)\s+([0-9.]+)\)$/);
+  if (p3) {
+    const [r, g, b] = p3.slice(1).map(Number);
+    const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    return getAccentShade(luminance, accent);
+  }
+
+  const hex = lower.match(/^#([0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})$/);
+  if (!hex) return value;
+  let digits = hex[1];
+  let alpha = '';
+  if (digits.length === 4 || digits.length === 8) {
+    alpha = digits.slice(-2);
+    digits = digits.slice(0, -2);
+  }
+  if (digits.length === 3) digits = digits.split('').map(char => char + char).join('');
+  const rgb = hexToRgb('#' + digits);
+  const luminance = (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b) / 255;
+  const shade = getAccentShade(luminance, accent);
+  return alpha ? shade + alpha : shade;
+}
+
+function recolorFileSvg(svg, accent) {
+  return svg
+    .replace(/((?:fill|stroke|stop-color)\s*=\s*)(["'])(.*?)\2/gi, (match, prefix, quote, value) =>
+      prefix + quote + recolorColor(value, accent) + quote)
+    .replace(/(style\s*=\s*)(["'])(.*?)\2/gi, (match, prefix, quote, style) => {
+      const recolored = style.replace(/((?:fill|stroke|stop-color)\s*:\s*)([^;]+)/gi, (declaration, property, value) =>
+        property + recolorColor(value, accent));
+      return prefix + quote + recolored + quote;
+    });
+}
+
 function copySvgTree(sourceRoot, destinationRoot, transform) {
   const files = walkSvgFiles(sourceRoot);
   for (const sourcePath of files) {
@@ -131,17 +180,11 @@ for (const flavor of flavors) {
     '#f16b52': flavor.accent,
     '#ff896f': accentLight,
   };
-  const fileColorMap = {
-    '#f16b52': flavor.accent,
-    '#ff896f': accentLight,
-    '#d95740': folderAccent,
-  };
-
   const flavorRoot = path.join(buildRoot, flavor.slug);
   const transformedFiles = copySvgTree(
     sourceFileIcons,
     path.join(flavorRoot, 'files'),
-    svg => transformHexColors(svg, fileColorMap),
+    svg => recolorFileSvg(svg, flavor.accent),
   );
   const transformedFolders = copySvgTree(
     path.join(buildRoot, 'main', 'folders'),
