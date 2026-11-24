@@ -134,6 +134,29 @@ test('each flavor has its own accent on Nacre folder artwork', () => {
     }
 });
 
+test('each flavor uses its accent across generated file glyphs', () => {
+    const flavors = {
+        mocha: '#cba6f7', grove: '#a7c080', ember: '#fe8019',
+        tide: '#7e9cd8', abyss: '#80cbc4', nocturne: '#719cd6', jade: '#2dd5b7',
+    };
+    const collect = directory => {
+        let content = '';
+        for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+            const fullPath = path.join(directory, entry.name);
+            if (entry.isDirectory()) content += collect(fullPath);
+            else if (entry.isFile() && entry.name.endsWith('.svg')) {
+                content += fs.readFileSync(fullPath, 'utf8').toLowerCase();
+            }
+        }
+        return content;
+    };
+    for (const [slug, accent] of Object.entries(flavors)) {
+        const fileContent = collect(path.join(root, 'icons/build', slug, 'files'));
+        assert.ok(fileContent.includes(accent), slug + ' file icons are missing their flavor accent');
+        assert.ok(!fileContent.includes('color(display-p3 .28 .46 .82)'), slug + ' retains the source blue P3 color');
+    }
+});
+
 test('original Nacre editor, sidebar and main theme identity remain unchanged', () => {
     const theme = JSON.parse(fs.readFileSync(path.join(root, 'themes/nacre-color-theme.json'), 'utf8'));
     assert.equal(theme.name, 'Nacre');
