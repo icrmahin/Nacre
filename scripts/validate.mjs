@@ -111,6 +111,31 @@ if (pkg) {
   }
   pass('All seven flavor themes use one neutral text color with readable selection states');
 
+  const expectedFlavorAccents = {
+    mocha: '#cba6f7', grove: '#a7c080', ember: '#fe8019',
+    tide: '#7e9cd8', abyss: '#80cbc4', nocturne: '#719cd6', jade: '#2dd5b7',
+  };
+  for (const [slug, accent] of Object.entries(expectedFlavorAccents)) {
+    const sourceBadgePath = path.join(root, 'icons/build', slug, 'folders/filled/folder_src.variant.carbon.svg');
+    if (!fs.existsSync(sourceBadgePath)) {
+      fail(slug + ': generated src folder icon is missing');
+      continue;
+    }
+    const sourceBadge = fs.readFileSync(sourceBadgePath, 'utf8').toLowerCase();
+    const accentRgb = [1, 3, 5].map(index => parseInt(accent.slice(index, index + 2), 16));
+    const lighterAccent = '#' + accentRgb.map(value =>
+      Math.round(value + (255 - value) * 0.24).toString(16).padStart(2, '0')
+    ).join('');
+    if (!sourceBadge.includes(accent) || !sourceBadge.includes(lighterAccent)) {
+      fail(slug + ': folder body and embedded sub-icon must both use the flavor accent palette');
+    }
+    if (sourceBadge.includes('#4775d1') || sourceBadge.includes('#d0d0d0')) {
+      fail(slug + ': source blue or uncolored gray remains in the flavor src sub-icon');
+    }
+  }
+  pass('All seven flavor src folder sub-icons use their matching accent palette');
+
+
   const iconThemes = pkg.contributes?.iconThemes ?? [];
   const actualShape = iconThemes.map(({ id, label, path }) => ({ id, label, path }));
   const expectedShape = expectedIconThemes.map(({ id, label, path }) => ({ id, label, path }));
@@ -231,13 +256,36 @@ if (exists('icons/build/main/folders/nacre-folder.svg')) {
     }
   };
   collectSvgFiles(mainFolderRoot);
-  const defaultBluePalette = ['#7897ba', '#8ca9cc', '#aee33e', '#f16b52', '#ff896f'];
-  const offenders = svgFiles.filter(file => {
+  const coloredAssets = [];
+  for (const file of svgFiles) {
     const svg = fs.readFileSync(file, 'utf8').toLowerCase();
-    return defaultBluePalette.some(color => svg.includes(color));
-  });
-  if (offenders.length) fail('Main Nacre folder artwork still contains default blue/lime/orange palette colors: ' + offenders.length + ' SVG(s)');
-  else pass('All main Nacre folder artwork uses neutralized default folder colors');
+    const colors = svg.match(/#[0-9a-f]{6}\b/g) ?? [];
+    if (colors.some(color => {
+      const red = parseInt(color.slice(1, 3), 16);
+      const green = parseInt(color.slice(3, 5), 16);
+      const blue = parseInt(color.slice(5, 7), 16);
+      return Math.max(red, green, blue) - Math.min(red, green, blue) > 1;
+    })) coloredAssets.push(file);
+  }
+  if (coloredAssets.length) {
+    fail('Main Nacre folder artwork is not fully grayscale: ' + coloredAssets.length + ' SVG(s)');
+  } else pass('All main Nacre folder artwork is neutral grayscale');
+
+  const defaultFolder = fs.readFileSync(
+    path.join(mainFolderRoot, 'nacre-folder.svg'),
+    'utf8',
+  ).toLowerCase();
+  if (!defaultFolder.includes('#777777') || defaultFolder.includes('#17191c')) {
+    fail('Main Nacre custom folder should use visible neutral gray rather than a near-black fill');
+  } else pass('Main Nacre custom folder uses a visible gray fill');
+
+  const sourceBadge = fs.readFileSync(
+    path.join(mainFolderRoot, 'filled/folder_src.variant.carbon.svg'),
+    'utf8',
+  ).toLowerCase();
+  if (!sourceBadge.includes('#d0d0d0') || sourceBadge.includes('#4775d1')) {
+    fail('Main Nacre src folder badge must be neutral gray, not blue');
+  } else pass('Main Nacre src folder sub-icon is neutral gray');
 } else fail('Generated neutral Nacre folder artwork is missing');
 
 const extensionSource = fs.readFileSync(path.join(root, 'extension.js'), 'utf8');
