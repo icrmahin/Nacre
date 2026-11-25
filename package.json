@@ -86,12 +86,12 @@
         "path": "./themes/nacre-osaka-jade-color-theme.json"
       },
       {
-        "label": "Nacre Tokyo Night",
+        "label": "Nacre Dusk",
         "uiTheme": "vs-dark",
         "path": "./themes/nacre-tokyo-night-color-theme.json"
       },
       {
-        "label": "Nacre One Dark Pro",
+        "label": "Nacre Alloy",
         "uiTheme": "vs-dark",
         "path": "./themes/nacre-one-dark-pro-color-theme.json"
       }
@@ -139,12 +139,12 @@
       },
       {
         "id": "nacre-tokyo-night-icons",
-        "label": "Nacre Tokyo Icons",
+        "label": "Nacre Dusk Icons",
         "path": "./themes/nacre-tokyo-night-file-icons.json"
       },
       {
         "id": "nacre-one-dark-icons",
-        "label": "Nacre One Dark Icons",
+        "label": "Nacre Alloy Icons",
         "path": "./themes/nacre-one-dark-file-icons.json"
       }
     ],
