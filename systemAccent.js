@@ -365,7 +365,7 @@ function buildNacreCustomizations(accentColor) {
     const accent = parseColorValue(accentColor);
     if (!accent) return {};
 
-    const editor = '#0B0C0E';
+    const editor = '#15191B';
     const surface = mixColors('#111214', accent, 0.035);
     const raisedSurface = mixColors('#17191C', accent, 0.05);
     const border = mixColors('#25282D', accent, 0.12);
