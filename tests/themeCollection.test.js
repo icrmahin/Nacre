@@ -139,13 +139,13 @@ test('all ten color themes use distinct editor backgrounds', () => {
         ));
         return theme.colors['editor.background'].toLowerCase();
     });
-    assert.equal(new Set(backgrounds).size, 8);
+    assert.equal(new Set(backgrounds).size, 10);
 });
 
-test('registers eight separate file icon themes for manual pairing', () => {
+test('registers ten separate file icon themes for manual pairing', () => {
     const actual = pkg.contributes.iconThemes.map(theme => [theme.id, theme.label]);
     assert.deepEqual(actual, expectedIconThemes.map(([id, label]) => [id, label]));
-    assert.equal(new Set(pkg.contributes.iconThemes.map(theme => theme.path)).size, 8);
+    assert.equal(new Set(pkg.contributes.iconThemes.map(theme => theme.path)).size, 10);
     assert.equal(pkg.contributes.productIconThemes.length, 1);
     assert.equal(pkg.contributes.productIconThemes[0].id, 'nacre-product-icons');
 });
