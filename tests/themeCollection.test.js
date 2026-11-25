@@ -294,6 +294,90 @@ test('original Nacre editor, sidebar and main theme identity remain unchanged', 
     assert.ok(theme.tokenColors.length >= 220);
 });
 
+
+test('Nacre Core has its own documented Signal / Noise syntax hierarchy', () => {
+    const core = JSON.parse(fs.readFileSync(path.join(root, 'themes/nacre-color-theme.json'), 'utf8'));
+    assert.equal(pkg.version, '1.0.3');
+    assert.equal(core.colors['editor.background'], '#15191B');
+    assert.equal(core.colors.foreground, '#EAE7DF');
+    assert.equal(core.colors.focusBorder, '#F16B52');
+    assert.equal(core.semanticTokenColors.keyword, '#F16B52');
+    assert.equal(core.semanticTokenColors.function, '#D7C68F');
+    assert.equal(core.semanticTokenColors.type, '#AEB6B5');
+    assert.equal(core.semanticTokenColors.string, '#B9C8A5');
+    assert.equal(core.semanticTokenColors.property, '#91B8AD');
+    assert.equal(core.semanticTokenColors.number, '#D5A078');
+    assert.equal(core.semanticTokenColors.comment, '#697577');
+    assert.equal(core.tokenColors.length, 221);
+    assert.equal(Object.keys(core.semanticTokenColors).length, 35);
+
+    const ruleColor = name => core.tokenColors.find(rule => rule.name === name)?.settings?.foreground;
+    assert.equal(ruleColor('Keyword'), '#F16B52');
+    assert.equal(ruleColor('Variable'), '#EAE7DF');
+    assert.equal(ruleColor('Function call'), '#D7C68F');
+    assert.equal(ruleColor('Type'), '#AEB6B5');
+    assert.equal(ruleColor('String'), '#B9C8A5');
+    assert.equal(ruleColor('Number'), '#D5A078');
+    assert.equal(ruleColor('Comment'), '#697577');
+    assert.equal(ruleColor('JSON key'), '#91B8AD');
+
+    const copiedPaletteColors = new Set([
+        '#79c0ff', '#ffa657', '#ff7b72', '#d2a8ff', '#a5d6ff', '#7ee787',
+    ]);
+    for (const rule of core.tokenColors) {
+        const color = rule.settings?.foreground?.toLowerCase();
+        assert.ok(!copiedPaletteColors.has(color), 'Nacre Core still contains a legacy syntax color: ' + color);
+    }
+});
+
+test('Tokyo Night and One Dark Pro remain recognizable palette adaptations', () => {
+    const cases = [
+        {
+            path: 'themes/nacre-tokyo-night-color-theme.json',
+            label: 'Nacre Tokyo Night',
+            background: '#1A1B26',
+            keyword: '#BB9AF7',
+            function: '#7AA2F7',
+        },
+        {
+            path: 'themes/nacre-one-dark-pro-color-theme.json',
+            label: 'Nacre One Dark Pro',
+            background: '#282C34',
+            keyword: '#C678DD',
+            function: '#61AFEF',
+        },
+    ];
+    for (const item of cases) {
+        const theme = JSON.parse(fs.readFileSync(path.join(root, item.path), 'utf8'));
+        assert.equal(theme.name, item.label);
+        assert.equal(theme.colors['editor.background'], item.background);
+        assert.equal(theme.semanticTokenColors.keyword, item.keyword);
+        assert.equal(theme.semanticTokenColors.function, item.function);
+        assert.equal(theme.colors.foreground, '#E6E9EF');
+    }
+});
+
+test('Nacre Core syntax fixtures cover representative language grammars', () => {
+    const fixtures = [
+        ['typescript.ts', ['interface', 'function', 'class']],
+        ['react.tsx', ['useState', 'return', 'className']],
+        ['dart.dart', ['enum', 'class', 'String']],
+        ['python.py', ['dataclass', 'def', 'return']],
+        ['markup.html', ['<main', 'class=', '<strong']],
+        ['styles.css', ['.theme-preview', 'background:', 'transition:']],
+        ['data.json', ['"name"', '"accent"', 'true']],
+    ];
+    for (const [file, markers] of fixtures) {
+        const fullPath = path.join(root, 'tests/fixtures/syntax', file);
+        assert.ok(fs.existsSync(fullPath), 'missing syntax fixture ' + file);
+        const source = fs.readFileSync(fullPath, 'utf8');
+        assert.ok(source.length > 40, file + ' is unexpectedly empty');
+        for (const marker of markers) {
+            assert.ok(source.includes(marker), file + ' is missing marker ' + marker);
+        }
+    }
+});
+
 test('desktop accent remains isolated to Nacre and icon theme selection stays manual', () => {
     const extensionSource = fs.readFileSync(path.join(root, 'extension.js'), 'utf8');
     assert.match(extensionSource, /getConfiguration\('workbench'\)\.get\('colorTheme'\)\s*===\s*'Nacre'/);
