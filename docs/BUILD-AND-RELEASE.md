@@ -21,7 +21,7 @@ node --check systemAccent.js
 node --check syntaxAccent.js
 ```
 
-npm run build:icons generates the neutral Nacre folder artwork and seven flavor-specific file icon sets from the shared SVG sources. Validation checks the eight color theme registrations, eight independently selectable file icon contributions, all generated SVG paths, neutral grayscale across every original Nacre folder SVG, flavor-colored embedded folder sub-icons, product-icon font references, and the rule that desktop-accent synchronization belongs only to the original Nacre theme. The prevalidate and pretest npm hooks run the icon generator automatically. Unit tests cover GNOME/KDE detection, accent parsing, workbench palette generation, syntax tinting, contrast, restoration and variant isolation.
+npm run build:icons generates the neutral Nacre folder artwork and nine flavor-specific file icon sets from the shared SVG sources. Validation checks the ten color theme registrations, ten independently selectable file icon contributions, all generated SVG paths, Nacre Core palette roles and token coverage, neutral grayscale across every original Nacre folder SVG, flavor-colored embedded folder sub-icons, product-icon font references, and the rule that desktop-accent synchronization belongs only to the original Nacre theme. The prevalidate and pretest npm hooks run the icon generator automatically. Unit tests cover GNOME/KDE detection, accent parsing, workbench palette generation, syntax tinting, contrast, restoration and variant isolation.
 
 ## Build a local VSIX
 
@@ -40,7 +40,7 @@ Alternatively, in VS Code open Extensions, select the `...` menu, choose **Insta
 
 ## Build a test VSIX on GitHub without publishing
 
-Use **Actions → Build Nacre Test VSIX (No Release) → Run workflow**. Select the development branch `feat/nacre-standalone-theme-collection` in the branch selector and start the workflow.
+Use **Actions → Build Nacre Test VSIX (No Release) → Run workflow**. Select the development branch `feat/nacre-core-original-design` in the branch selector and start the workflow.
 
 The workflow runs validation and tests, packages the selected branch, and uploads a ZIP artifact containing the VSIX. Download it from the completed run's **Artifacts** section and extract the `.vsix`. The artifact expires after 14 days. This workflow does not create a GitHub Release, push a tag or publish to the Marketplace.
 
