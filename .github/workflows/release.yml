@@ -1,6 +1,7 @@
-name: Build and publish Nacre VSIX (version tags only)
+name: Build and publish Nacre VSIX
 
 on:
+  workflow_dispatch:
   push:
     tags:
       - "v*"
@@ -12,7 +13,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out tagged source
+      - name: Check out release source
         uses: actions/checkout@v4
 
       - name: Set up Node.js
@@ -28,12 +29,23 @@ jobs:
           node --check systemAccent.js
           node --check syntaxAccent.js
 
-      - name: Verify tag matches package version
+      - name: Determine and verify release version
         id: version
         shell: bash
         run: |
           VERSION="$(node -p "require('./package.json').version")"
-          TAG="${GITHUB_REF_NAME}"
+
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+            if [[ "$GITHUB_REF" != "refs/heads/main" ]]; then
+              echo "Manual releases must be run from the main branch."
+              echo "Selected ref: $GITHUB_REF"
+              exit 1
+            fi
+            TAG="v$VERSION"
+          else
+            TAG="$GITHUB_REF_NAME"
+          fi
+
           TAG_VERSION="${TAG#v}"
           if [[ ! "$TAG_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "Invalid release tag: $TAG"
@@ -43,10 +55,12 @@ jobs:
             echo "package.json is $VERSION but tag is $TAG"
             exit 1
           fi
+
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "Preparing Nacre $VERSION ($TAG)"
 
-      - name: Package VSIX
+      - name: Package release VSIX
         run: npx --yes @vscode/vsce package --out "./icrmahin.nacre-${{ steps.version.outputs.version }}.vsix"
 
       - name: Create GitHub Release and attach VSIX
