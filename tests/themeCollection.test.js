@@ -11,7 +11,7 @@ const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'))
 const expectedLabels = [
     'Nacre', 'Nacre Mocha', 'Nacre Grove', 'Nacre Ember',
     'Nacre Tide', 'Nacre Abyss', 'Nacre Nocturne', 'Nacre Jade',
-    'Nacre Tokyo Night', 'Nacre One Dark Pro',
+    'Nacre Dusk', 'Nacre Alloy',
 ];
 const expectedIconThemes = [
     ['nacre-file-icons', 'Nacre File Icons', 'main'],
@@ -22,8 +22,8 @@ const expectedIconThemes = [
     ['nacre-abyss-icons', 'Nacre Abyss Icons', 'abyss'],
     ['nacre-nocturne-icons', 'Nacre Nocturne Icons', 'nocturne'],
     ['nacre-jade-icons', 'Nacre Jade Icons', 'jade'],
-    ['nacre-tokyo-night-icons', 'Nacre Tokyo Icons', 'tokyo-night'],
-    ['nacre-one-dark-icons', 'Nacre One Dark Icons', 'one-dark'],
+    ['nacre-tokyo-night-icons', 'Nacre Dusk Icons', 'tokyo-night'],
+    ['nacre-one-dark-icons', 'Nacre Alloy Icons', 'one-dark'],
 ];
 
 test('registers Nacre and nine approved flavor names without slash separators', () => {
@@ -223,61 +223,140 @@ test('all main Nacre folder artwork is grayscale and visible on the dark workben
     assert.ok(!sourceBadge.includes('#4775d1'));
 });
 
-test('each flavor applies its accent to folder bodies and embedded sub-icons', () => {
+test('flavor folders accent only their body paths and preserve multicolor sub-icons', () => {
     const flavors = {
-        mocha: '#cba6f7', grove: '#a7c080', ember: '#fe8019',
-        tide: '#7e9cd8', abyss: '#80cbc4', nocturne: '#719cd6', jade: '#2dd5b7',
-        'tokyo-night': '#7aa2f7', 'one-dark': '#61afef',
+        mocha: '#CBA6F7', grove: '#A7C080', ember: '#FE8019',
+        tide: '#7E9CD8', abyss: '#80CBC4', nocturne: '#719CD6', jade: '#2DD5B7',
+        'tokyo-night': '#7AA2F7', 'one-dark': '#61AFEF',
     };
-    const mix = (hexA, hexB, amount) => {
-        const a = [1, 3, 5].map(index => parseInt(hexA.slice(index, index + 2), 16));
-        const b = [1, 3, 5].map(index => parseInt(hexB.slice(index, index + 2), 16));
-        return '#' + a.map((value, index) =>
-            Math.round(value + (b[index] - value) * amount).toString(16).padStart(2, '0')
-        ).join('');
+    const collect = directory => {
+        const files = [];
+        const visit = current => {
+            for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
+                const fullPath = path.join(current, entry.name);
+                if (entry.isDirectory()) visit(fullPath);
+                else if (entry.isFile() && entry.name.endsWith('.svg')) {
+                    files.push(path.relative(directory, fullPath));
+                }
+            }
+        };
+        visit(directory);
+        return files.sort();
     };
+    const accentFirstPath = (svg, accent) => svg.replace(/<path\b[^>]*>/i, pathTag => pathTag.replace(
+        /(\b(?:fill|stroke)\s*=\s*)(["'])(#[0-9a-f]{3,8})\2/gi,
+        (match, prefix, quote) => prefix + quote + accent + quote,
+    ));
+
     for (const [slug, accent] of Object.entries(flavors)) {
-        const artwork = fs.readFileSync(
-            path.join(root, 'icons/build', slug, 'folders/nacre-folder.svg'),
-            'utf8',
-        ).toLowerCase();
-        assert.ok(artwork.includes(accent), slug + ' folder body is missing its flavor accent');
+        const sourceRoot = path.join(root, 'icons/folders');
+        const outputRoot = path.join(root, 'icons/build', slug, 'folders');
+        const sourceFiles = collect(sourceRoot);
+        assert.deepEqual(collect(outputRoot), sourceFiles, slug + ' folder SVG set differs from source');
+
+        for (const relative of sourceFiles) {
+            const source = fs.readFileSync(path.join(sourceRoot, relative), 'utf8');
+            const generated = fs.readFileSync(path.join(outputRoot, relative), 'utf8');
+            assert.equal(
+                generated,
+                accentFirstPath(source, accent),
+                slug + ' recolored something outside the first folder-body path in ' + relative,
+            );
+        }
 
         const sourceBadge = fs.readFileSync(
-            path.join(root, 'icons/build', slug, 'folders/filled/folder_src.variant.carbon.svg'),
+            path.join(sourceRoot, 'filled/folder_src.variant.carbon.svg'),
             'utf8',
         ).toLowerCase();
-        const expectedBadgeAccent = mix(accent, '#ffffff', 0.24);
-        assert.ok(
-            sourceBadge.includes(expectedBadgeAccent),
-            slug + ' source-folder sub-icon is missing its lighter flavor accent',
-        );
-        assert.ok(!sourceBadge.includes('#4775d1'), slug + ' still contains the source blue sub-icon');
-        assert.ok(!sourceBadge.includes('#d0d0d0'), slug + ' still contains an uncolored gray sub-icon');
+        const generatedBadge = fs.readFileSync(
+            path.join(outputRoot, 'filled/folder_src.variant.carbon.svg'),
+            'utf8',
+        ).toLowerCase();
+        assert.ok(generatedBadge.includes(accent.toLowerCase()), slug + ' src folder body is not accented');
+        assert.ok(generatedBadge.includes('#4775d1'), slug + ' lost the original multicolor code mark');
+        assert.ok(sourceBadge.includes('#4775d1'), 'source src folder badge must remain untouched');
+
+        const apiBadge = fs.readFileSync(
+            path.join(outputRoot, 'filled/folder_api.variant.carbon.svg'),
+            'utf8',
+        ).toLowerCase();
+        assert.ok(apiBadge.includes(accent.toLowerCase()), slug + ' API folder body is not accented');
+        assert.ok(apiBadge.includes('#aee33e'), slug + ' lost the API folder's green sub-icon');
+
+        const claudeBadge = fs.readFileSync(
+            path.join(outputRoot, 'filled/folder_claude.variant.carbon.svg'),
+            'utf8',
+        ).toLowerCase();
+        assert.ok(claudeBadge.includes('#f78c6c'), slug + ' lost the Claude folder's original sub-icon color');
     }
 });
 
-test('each flavor uses its accent across generated file glyphs', () => {
-    const flavors = {
-        mocha: '#cba6f7', grove: '#a7c080', ember: '#fe8019',
-        tide: '#7e9cd8', abyss: '#80cbc4', nocturne: '#719cd6', jade: '#2dd5b7',
-        'tokyo-night': '#7aa2f7', 'one-dark': '#61afef',
-    };
+test('flavor file glyphs are copied byte-for-byte without accent tinting', () => {
+    const flavors = [
+        'mocha', 'grove', 'ember', 'tide', 'abyss',
+        'nocturne', 'jade', 'tokyo-night', 'one-dark',
+    ];
     const collect = directory => {
-        let content = '';
-        for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
-            const fullPath = path.join(directory, entry.name);
-            if (entry.isDirectory()) content += collect(fullPath);
-            else if (entry.isFile() && entry.name.endsWith('.svg')) {
-                content += fs.readFileSync(fullPath, 'utf8').toLowerCase();
+        const files = [];
+        const visit = current => {
+            for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
+                const fullPath = path.join(current, entry.name);
+                if (entry.isDirectory()) visit(fullPath);
+                else if (entry.isFile() && entry.name.endsWith('.svg')) {
+                    files.push(path.relative(directory, fullPath));
+                }
             }
-        }
-        return content;
+        };
+        visit(directory);
+        return files.sort();
     };
-    for (const [slug, accent] of Object.entries(flavors)) {
-        const fileContent = collect(path.join(root, 'icons/build', slug, 'files'));
-        assert.ok(fileContent.includes(accent), slug + ' file icons are missing their flavor accent');
-        assert.ok(!fileContent.includes('color(display-p3 .28 .46 .82)'), slug + ' retains the source blue P3 color');
+
+    const sourceRoot = path.join(root, 'icons/files');
+    const sourceFiles = collect(sourceRoot);
+    assert.ok(sourceFiles.length > 100);
+
+    for (const slug of flavors) {
+        const outputRoot = path.join(root, 'icons/build', slug, 'files');
+        assert.deepEqual(collect(outputRoot), sourceFiles, slug + ' file SVG set differs from source');
+        for (const relative of sourceFiles) {
+            assert.equal(
+                fs.readFileSync(path.join(outputRoot, relative), 'utf8'),
+                fs.readFileSync(path.join(sourceRoot, relative), 'utf8'),
+                slug + ' unexpectedly tinted file glyph ' + relative,
+            );
+        }
+    }
+});
+
+test('extension buttons use each theme’s own accent, readable text and non-orange hover surfaces', () => {
+    for (const contribution of pkg.contributes.themes) {
+        const theme = JSON.parse(fs.readFileSync(
+            path.join(root, contribution.path.replace(/^\.\//, '')),
+            'utf8',
+        ));
+        const colors = theme.colors;
+        const normalBackground = colors['button.secondaryBackground'] || colors['editor.background'];
+        const normalForeground = colors.foreground;
+        const hoverBackground = colors['editor.selectionBackground']
+            || colors['list.activeSelectionBackground']
+            || normalBackground;
+
+        assert.equal(colors['extensionButton.background'], normalBackground, contribution.label);
+        assert.equal(colors['extensionButton.foreground'], normalForeground, contribution.label);
+        assert.equal(colors['extensionButton.hoverBackground'], hoverBackground, contribution.label);
+        assert.equal(colors['extensionButton.prominentBackground'], normalBackground, contribution.label);
+        assert.equal(colors['extensionButton.prominentForeground'], normalForeground, contribution.label);
+        assert.equal(colors['extensionButton.prominentHoverBackground'], hoverBackground, contribution.label);
+        assert.notEqual(
+            colors['extensionButton.foreground'].toLowerCase(),
+            '#15191b',
+            contribution.label + ' uses dark/black text on the extension button',
+        );
+        assert.notEqual(
+            colors['extensionButton.hoverBackground'].toLowerCase(),
+            '#f16b52',
+            contribution.label + ' still uses the old Nacre orange hover fill',
+        );
     }
 });
 
