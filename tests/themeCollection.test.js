@@ -228,7 +228,6 @@ test('each flavor applies its accent to folder bodies and embedded sub-icons', (
         mocha: '#cba6f7', grove: '#a7c080', ember: '#fe8019',
         tide: '#7e9cd8', abyss: '#80cbc4', nocturne: '#719cd6', jade: '#2dd5b7',
         'tokyo-night': '#7aa2f7', 'one-dark': '#61afef',
-        'tokyo-night': '#7aa2f7', 'one-dark': '#61afef',
     };
     const mix = (hexA, hexB, amount) => {
         const a = [1, 3, 5].map(index => parseInt(hexA.slice(index, index + 2), 16));
@@ -262,6 +261,7 @@ test('each flavor uses its accent across generated file glyphs', () => {
     const flavors = {
         mocha: '#cba6f7', grove: '#a7c080', ember: '#fe8019',
         tide: '#7e9cd8', abyss: '#80cbc4', nocturne: '#719cd6', jade: '#2dd5b7',
+        'tokyo-night': '#7aa2f7', 'one-dark': '#61afef',
     };
     const collect = directory => {
         let content = '';
