@@ -1,12 +1,15 @@
 # Changelog
 
-## 1.0.3 — Grayscale Nacre folders and flavor-matched sub-icons
+## 1.0.3 — Nacre Core design system and final icon polish
 
-- Reworked the original Nacre folder icon set to use neutral grayscale throughout, including embedded folder-type marks.
-- Lifted the original folder body from near-black to a visible medium gray for clearer contrast on Nacre's dark workbench.
-- Recolored embedded folder sub-icons in each flavor to that flavor's own accent palette; removed the leftover blue code badge.
-- Preserved all file glyphs, icon silhouettes, file/folder associations, manual icon-theme selection and product icons.
-- Kept the seven flavor text-contrast fixes and the original Nacre color theme unchanged.
+- Redesigned the original Nacre Core around its own Signal / Noise visual language: graphite surfaces, warm bone text, Signal Vermilion, brass, soft moss, sea glass and warm amber.
+- Reworked all 221 TextMate rule colors and all 35 semantic-token mappings around a deliberate language-role hierarchy; retained the existing grammar scope coverage.
+- Added the Nacre Core design-system specification and representative TypeScript, React, Dart, Python, HTML, CSS and JSON syntax fixtures.
+- Added Nacre Tokyo Night and Nacre One Dark Pro as independently selectable palette adaptations, each with its own manually selectable matching file icon theme.
+- Preserved the nine existing palette flavors, neutral interface text readability and manual color/icon pairing.
+- Preserved the original grayscale folder treatment and flavor-matched embedded folder sub-icons.
+- Kept desktop-accent synchronization exclusive to the exact active color theme name Nacre.
+- Kept package version at 1.0.3; this branch is for local test-build review and is not a Marketplace release.
 
 ## 1.0.2 — Independent palette and icon flavors
 
