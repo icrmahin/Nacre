@@ -79,8 +79,8 @@ test('accepts portal normalized RGB tuples and rejects invalid components', () =
 
 test('derives a deep neutral editor with restrained accent-tinted chrome', () => {
     const colors = buildNacreCustomizations('#3584E4');
-    assert.equal(colors['editor.background'], '#0B0C0E');
-    assert.notEqual(colors['sideBar.background'], '#111214');
+    assert.equal(colors['editor.background'], '#15191B');
+    assert.notEqual(colors['sideBar.background'], '#15191B');
     assert.equal(colors['button.background'], '#3584E4');
     assert.equal(colors['activityBar.activeBorder'], '#3584E4');
     assert.equal(Object.hasOwn(colors, 'editor.foreground'), false);

@@ -16,6 +16,8 @@ const flavors = [
   { slug: 'abyss', short: 'Abyss', accent: '#80CBC4' },
   { slug: 'nocturne', short: 'Nocturne', accent: '#719CD6' },
   { slug: 'jade', short: 'Jade', accent: '#2DD5B7' },
+  { slug: 'tokyo-night', short: 'Dusk', accent: '#7AA2F7' },
+  { slug: 'one-dark', short: 'Alloy', accent: '#61AFEF' },
 ];
 
 function readJson(filePath) {
@@ -38,82 +40,7 @@ function walkSvgFiles(directory) {
   return output;
 }
 
-function transformHexColors(svg, colorMap) {
-  return svg.replace(/#[0-9a-f]{6}\b/gi, value => colorMap[value.toLowerCase()] ?? value);
-}
-
-function hexToRgb(hex) {
-  return {
-    r: parseInt(hex.slice(1, 3), 16),
-    g: parseInt(hex.slice(3, 5), 16),
-    b: parseInt(hex.slice(5, 7), 16),
-  };
-}
-
-function rgbToHex({ r, g, b }) {
-  return '#' + [r, g, b].map(value => Math.round(value).toString(16).padStart(2, '0')).join('').toUpperCase();
-}
-
-function mix(hexA, hexB, amount) {
-  const a = hexToRgb(hexA);
-  const b = hexToRgb(hexB);
-  return rgbToHex({
-    r: a.r + (b.r - a.r) * amount,
-    g: a.g + (b.g - a.g) * amount,
-    b: a.b + (b.b - a.b) * amount,
-  });
-}
-
-function getAccentShade(luminance, accent) {
-  const light = mix(accent, '#FFFFFF', 0.24);
-  const dark = mix(accent, '#15191B', 0.2);
-  if (luminance >= 0.9) return '#FFFFFF';
-  if (luminance <= 0.1) return '#15191B';
-  if (luminance >= 0.62) return light;
-  if (luminance <= 0.28) return dark;
-  return accent;
-}
-
-function recolorColor(value, accent) {
-  const trimmed = value.trim();
-  const lower = trimmed.toLowerCase();
-  if (['none', 'transparent', 'currentcolor', 'white', 'black'].includes(lower)) return value;
-  if (lower.startsWith('url(')) return value;
-
-  const p3 = lower.match(/^color\(display-p3\s+([0-9.]+)\s+([0-9.]+)\s+([0-9.]+)\)$/);
-  if (p3) {
-    const [r, g, b] = p3.slice(1).map(Number);
-    const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-    return getAccentShade(luminance, accent);
-  }
-
-  const hex = lower.match(/^#([0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})$/);
-  if (!hex) return value;
-  let digits = hex[1];
-  let alpha = '';
-  if (digits.length === 4 || digits.length === 8) {
-    alpha = digits.slice(-2);
-    digits = digits.slice(0, -2);
-  }
-  if (digits.length === 3) digits = digits.split('').map(char => char + char).join('');
-  const rgb = hexToRgb('#' + digits);
-  const luminance = (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b) / 255;
-  const shade = getAccentShade(luminance, accent);
-  return alpha ? shade + alpha : shade;
-}
-
-function recolorFileSvg(svg, accent) {
-  return svg
-    .replace(/((?:fill|stroke|stop-color)\s*=\s*)(["'])(.*?)\2/gi, (match, prefix, quote, value) =>
-      prefix + quote + recolorColor(value, accent) + quote)
-    .replace(/(style\s*=\s*)(["'])(.*?)\2/gi, (match, prefix, quote, style) => {
-      const recolored = style.replace(/((?:fill|stroke|stop-color)\s*:\s*)([^;]+)/gi, (declaration, property, value) =>
-        property + recolorColor(value, accent));
-      return prefix + quote + recolored + quote;
-    });
-}
-
-function copySvgTree(sourceRoot, destinationRoot, transform) {
+function copySvgTree(sourceRoot, destinationRoot, transform = svg => svg) {
   const files = walkSvgFiles(sourceRoot);
   for (const sourcePath of files) {
     const relative = path.relative(sourceRoot, sourcePath);
@@ -141,6 +68,16 @@ function rewriteIconPaths(iconTheme, flavorSlug) {
   }
 }
 
+// The first path in each folder SVG is the folder body. Recolor only that
+// shape; all later paths are embedded folder marks and retain their source
+// colors (including multicolor language/tool glyphs).
+function accentFolderBodySvg(svg, accent) {
+  return svg.replace(/<path\b[^>]*>/i, pathTag => pathTag.replace(
+    /(\b(?:fill|stroke)\s*=\s*)(["'])(#[0-9a-f]{3,8})\2/gi,
+    (match, prefix, quote) => prefix + quote + accent + quote,
+  ));
+}
+
 const neutralFolderColors = {
   '#7897ba': '#888888',
   '#8ca9cc': '#A3A3A3',
@@ -155,8 +92,16 @@ const neutralFolderColors = {
   '#ff896f': '#D0D0D0',
 };
 
+function hexToRgb(hex) {
+  return {
+    r: parseInt(hex.slice(1, 3), 16),
+    g: parseInt(hex.slice(3, 5), 16),
+    b: parseInt(hex.slice(5, 7), 16),
+  };
+}
+
 function neutralizeFolderSvg(svg) {
-  return svg.replace(/#[0-9a-f]{6}\b/gi, (value) => {
+  return svg.replace(/#[0-9a-f]{6}\b/gi, value => {
     const lower = value.toLowerCase();
     if (neutralFolderColors[lower]) return neutralFolderColors[lower];
 
@@ -179,7 +124,7 @@ const mainFolderCount = copySvgTree(
   svg => neutralizeFolderSvg(svg),
 );
 
-const mainTheme = structuredClone(baseIconTheme);
+const mainTheme = JSON.parse(JSON.stringify(baseIconTheme));
 mainTheme.name = 'Nacre File Icons';
 rewriteIconPaths(mainTheme, 'main');
 writeJson(path.join(root, 'themes', 'nacre-main-file-icons.json'), mainTheme);
@@ -187,21 +132,23 @@ writeJson(path.join(root, 'themes', 'nacre-main-file-icons.json'), mainTheme);
 const fileIconCount = walkSvgFiles(sourceFileIcons).length;
 
 for (const flavor of flavors) {
-  const folderAccent = mix(flavor.accent, '#17191C', 0.28);
-  const accentLight = mix(flavor.accent, '#FFFFFF', 0.2);
   const flavorRoot = path.join(buildRoot, flavor.slug);
-  const transformedFiles = copySvgTree(
+
+  // Variant file glyphs are identical to the original Nacre file glyphs.
+  const copiedFiles = copySvgTree(
     sourceFileIcons,
     path.join(flavorRoot, 'files'),
-    svg => recolorFileSvg(svg, flavor.accent),
-  );
-  const transformedFolders = copySvgTree(
-    path.join(buildRoot, 'main', 'folders'),
-    path.join(flavorRoot, 'folders'),
-    svg => recolorFileSvg(svg, flavor.accent),
   );
 
-  const theme = structuredClone(baseIconTheme);
+  // Variant folders use the flavor accent on the folder body only. Embedded
+  // folder sub-icons retain their original multicolor artwork.
+  const accentedFolders = copySvgTree(
+    sourceFolderIcons,
+    path.join(flavorRoot, 'folders'),
+    svg => accentFolderBodySvg(svg, flavor.accent),
+  );
+
+  const theme = JSON.parse(JSON.stringify(baseIconTheme));
   theme.name = 'Nacre ' + flavor.short + ' Icons';
   rewriteIconPaths(theme, flavor.slug);
   writeJson(
@@ -209,12 +156,12 @@ for (const flavor of flavors) {
     theme,
   );
 
-  if (transformedFiles !== fileIconCount || transformedFolders !== mainFolderCount) {
+  if (copiedFiles !== fileIconCount || accentedFolders !== walkSvgFiles(sourceFolderIcons).length) {
     throw new Error('Incomplete icon generation for ' + flavor.short);
   }
 }
 
 console.log(
-  'Generated neutral Nacre folders and seven flavor icon themes (' +
-  fileIconCount + ' file SVGs and ' + mainFolderCount + ' folder SVGs per flavor).',
+  'Generated neutral Nacre folders and nine flavor icon themes (' +
+  fileIconCount + ' unchanged file SVGs and ' + mainFolderCount + ' folder SVGs per flavor).',
 );

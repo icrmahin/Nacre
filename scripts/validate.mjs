@@ -16,9 +16,31 @@ const readJson = relativePath => {
 };
 const exists = relativePath => fs.existsSync(path.join(root, relativePath));
 
+const collectSvgPaths = relativeRoot => {
+  const absoluteRoot = path.join(root, relativeRoot);
+  const output = [];
+  const visit = directory => {
+    for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+      const fullPath = path.join(directory, entry.name);
+      if (entry.isDirectory()) visit(fullPath);
+      else if (entry.isFile() && entry.name.toLowerCase().endsWith('.svg')) {
+        output.push(path.relative(absoluteRoot, fullPath));
+      }
+    }
+  };
+  visit(absoluteRoot);
+  return output.sort();
+};
+
+const accentFolderBodySvg = (svg, accent) => svg.replace(/<path\b[^>]*>/i, pathTag => pathTag.replace(
+  /(\b(?:fill|stroke)\s*=\s*)(["'])(#[0-9a-f]{3,8})\2/gi,
+  (match, prefix, quote) => prefix + quote + accent + quote,
+));
+
 const expectedThemeLabels = [
   'Nacre', 'Nacre Mocha', 'Nacre Grove', 'Nacre Ember',
   'Nacre Tide', 'Nacre Abyss', 'Nacre Nocturne', 'Nacre Jade',
+  'Nacre Dusk', 'Nacre Alloy',
 ];
 const expectedIconThemes = [
   { id: 'nacre-file-icons', label: 'Nacre File Icons', path: './themes/nacre-main-file-icons.json', slug: 'main' },
@@ -29,6 +51,8 @@ const expectedIconThemes = [
   { id: 'nacre-abyss-icons', label: 'Nacre Abyss Icons', path: './themes/nacre-abyss-file-icons.json', slug: 'abyss' },
   { id: 'nacre-nocturne-icons', label: 'Nacre Nocturne Icons', path: './themes/nacre-nocturne-file-icons.json', slug: 'nocturne' },
   { id: 'nacre-jade-icons', label: 'Nacre Jade Icons', path: './themes/nacre-jade-file-icons.json', slug: 'jade' },
+  { id: 'nacre-tokyo-night-icons', label: 'Nacre Dusk Icons', path: './themes/nacre-tokyo-night-file-icons.json', slug: 'tokyo-night' },
+  { id: 'nacre-one-dark-icons', label: 'Nacre Alloy Icons', path: './themes/nacre-one-dark-file-icons.json', slug: 'one-dark' },
 ];
 
 const pkg = readJson('package.json');
@@ -45,7 +69,7 @@ if (pkg) {
   const actualLabels = themes.map(theme => theme.label);
   if (JSON.stringify(actualLabels) !== JSON.stringify(expectedThemeLabels)) {
     fail('Color themes are not registered in the expected order: ' + actualLabels.join(', '));
-  } else pass('All eight color themes use the approved names and order');
+  } else pass('All ten color themes use the approved names and order');
   if (new Set(actualLabels).size !== actualLabels.length) fail('Color theme labels must be unique');
   else pass('Color theme labels are unique');
 
@@ -109,39 +133,72 @@ if (pkg) {
       }
     }
   }
-  pass('All seven flavor themes use one neutral text color with readable selection states');
+  pass('All nine flavor themes use one neutral text color with readable selection states');
 
   const expectedFlavorAccents = {
-    mocha: '#cba6f7', grove: '#a7c080', ember: '#fe8019',
-    tide: '#7e9cd8', abyss: '#80cbc4', nocturne: '#719cd6', jade: '#2dd5b7',
+    mocha: '#CBA6F7', grove: '#A7C080', ember: '#FE8019',
+    tide: '#7E9CD8', abyss: '#80CBC4', nocturne: '#719CD6', jade: '#2DD5B7',
+    'tokyo-night': '#7AA2F7', 'one-dark': '#61AFEF',
   };
+  const sourceFolderPaths = collectSvgPaths('icons/folders');
   for (const [slug, accent] of Object.entries(expectedFlavorAccents)) {
-    const sourceBadgePath = path.join(root, 'icons/build', slug, 'folders/filled/folder_src.variant.carbon.svg');
-    if (!fs.existsSync(sourceBadgePath)) {
-      fail(slug + ': generated src folder icon is missing');
+    const variantRoot = 'icons/build/' + slug + '/folders';
+    const variantPaths = collectSvgPaths(variantRoot);
+    if (JSON.stringify(variantPaths) !== JSON.stringify(sourceFolderPaths)) {
+      fail(slug + ': generated folder SVG inventory differs from the source');
       continue;
     }
-    const sourceBadge = fs.readFileSync(sourceBadgePath, 'utf8').toLowerCase();
-    const accentRgb = [1, 3, 5].map(index => parseInt(accent.slice(index, index + 2), 16));
-    const lighterAccent = '#' + accentRgb.map(value =>
-      Math.round(value + (255 - value) * 0.24).toString(16).padStart(2, '0')
-    ).join('');
-    if (!sourceBadge.includes(accent) || !sourceBadge.includes(lighterAccent)) {
-      fail(slug + ': folder body and embedded sub-icon must both use the flavor accent palette');
+
+    for (const relative of sourceFolderPaths) {
+      const source = fs.readFileSync(path.join(root, 'icons/folders', relative), 'utf8');
+      const generated = fs.readFileSync(path.join(root, variantRoot, relative), 'utf8');
+      if (generated !== accentFolderBodySvg(source, accent)) {
+        fail(slug + ': folder SVG changed outside its first body path: ' + relative);
+      }
     }
-    if (sourceBadge.includes('#4775d1') || sourceBadge.includes('#d0d0d0')) {
-      fail(slug + ': source blue or uncolored gray remains in the flavor src sub-icon');
+
+    const sourceBadge = fs.readFileSync(
+      path.join(root, 'icons/folders/filled/folder_src.variant.carbon.svg'),
+      'utf8',
+    ).toLowerCase();
+    const generatedBadge = fs.readFileSync(
+      path.join(root, variantRoot, 'filled/folder_src.variant.carbon.svg'),
+      'utf8',
+    ).toLowerCase();
+    if (!generatedBadge.includes(accent.toLowerCase())) {
+      fail(slug + ': src folder body is missing its flavor accent');
+    }
+    if (!generatedBadge.includes('#4775d1') || !sourceBadge.includes('#4775d1')) {
+      fail(slug + ': original multicolor src sub-icon was changed');
     }
   }
-  pass('All seven flavor src folder sub-icons use their matching accent palette');
+  pass('All nine flavor folders accent only the folder body and preserve multicolor sub-icons');
 
+  const sourceFilePaths = collectSvgPaths('icons/files');
+  for (const [slug] of Object.entries(expectedFlavorAccents)) {
+    const variantRoot = 'icons/build/' + slug + '/files';
+    const variantPaths = collectSvgPaths(variantRoot);
+    if (JSON.stringify(variantPaths) !== JSON.stringify(sourceFilePaths)) {
+      fail(slug + ': generated file SVG inventory differs from the source');
+      continue;
+    }
+    for (const relative of sourceFilePaths) {
+      const source = fs.readFileSync(path.join(root, 'icons/files', relative), 'utf8');
+      const generated = fs.readFileSync(path.join(root, variantRoot, relative), 'utf8');
+      if (generated !== source) {
+        fail(slug + ': file glyph was modified instead of copied unchanged: ' + relative);
+        break;
+      }
+    }
+  }
+  pass('All nine flavor file icon sets are byte-identical to the original Nacre file glyphs');
 
   const iconThemes = pkg.contributes?.iconThemes ?? [];
   const actualShape = iconThemes.map(({ id, label, path }) => ({ id, label, path }));
   const expectedShape = expectedIconThemes.map(({ id, label, path }) => ({ id, label, path }));
   if (JSON.stringify(actualShape) !== JSON.stringify(expectedShape)) {
     fail('File icon themes are not registered in the expected order and paths');
-  } else pass('Eight file icon themes are registered for manual selection');
+  } else pass('Ten file icon themes are registered for manual selection');
 
   for (const entry of iconThemes) {
     const relative = entry.path?.replace(/^\.\//, '');
@@ -175,30 +232,6 @@ if (pkg) {
         fail(entry.label + ': folder icons are not flavor-specific');
       }
     }
-  }
-
-  const expectedAccents = {
-    mocha: '#cba6f7', grove: '#a7c080', ember: '#fe8019',
-    tide: '#7e9cd8', abyss: '#80cbc4', nocturne: '#719cd6', jade: '#2dd5b7',
-  };
-  for (const [slug, accent] of Object.entries(expectedAccents)) {
-    const fileRoot = path.join(root, 'icons/build', slug, 'files');
-    const folderRoot = path.join(root, 'icons/build', slug, 'folders');
-    const scan = directory => {
-      let contents = '';
-      for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
-        const fullPath = path.join(directory, entry.name);
-        if (entry.isDirectory()) contents += scan(fullPath);
-        else if (entry.isFile() && entry.name.endsWith('.svg')) contents += fs.readFileSync(fullPath, 'utf8').toLowerCase();
-      }
-      return contents;
-    };
-    if (!exists(path.relative(root, fileRoot)) || !exists(path.relative(root, folderRoot))) {
-      fail('Missing generated icon assets for ' + slug);
-      continue;
-    }
-    if (!scan(fileRoot).includes(accent)) fail(slug + ': file SVGs do not use their flavor accent');
-    if (!scan(folderRoot).includes(accent)) fail(slug + ': folder SVGs do not use their flavor accent');
   }
 
   const productIconThemes = pkg.contributes?.productIconThemes ?? [];
@@ -236,13 +269,23 @@ if (productIcons) {
 }
 
 const colorTheme = readJson('themes/nacre-color-theme.json');
+
+if (pkg?.version !== '1.0.3') fail('The approved package version must remain exactly 1.0.3');
+else pass('Package version remains unchanged at 1.0.3');
+
 if (colorTheme) {
   if (colorTheme.name !== 'Nacre') fail('Original Nacre color theme name is not preserved');
   else pass('Original Nacre color theme name is preserved');
-  if (colorTheme.colors?.['editor.background'] !== '#0B0C0E') fail('Original Nacre editor background must remain #0B0C0E');
-  else pass('Original Nacre editor background is preserved');
-  if (colorTheme.colors?.['sideBar.background'] !== '#111214') fail('Original Nacre sidebar background must remain #111214');
-  else pass('Original Nacre sidebar background is preserved');
+  if (colorTheme.colors?.foreground !== '#EAE7DF') fail('Nacre Core foreground must use warm bone');
+  if (colorTheme.colors?.focusBorder !== '#F16B52') fail('Nacre Core must keep Signal Vermilion as its signature accent');
+  if (colorTheme.semanticTokenColors?.keyword !== '#F16B52') fail('Nacre Core keyword semantics must use Signal Vermilion');
+  if (colorTheme.semanticTokenColors?.function !== '#D7C68F') fail('Nacre Core function semantics must use brass');
+  if (colorTheme.semanticTokenColors?.comment !== '#697577') fail('Nacre Core comments must use muted graphite');
+  if (colorTheme.tokenColors?.length !== 221) fail('Nacre Core must retain all 221 TextMate rules');
+  if (colorTheme.colors?.['editor.background'] !== '#15191B') fail('Nacre Core editor background must be #15191B');
+  else pass('Nacre Core editor background is #15191B');
+  if (colorTheme.colors?.['sideBar.background'] !== '#15191B') fail('Nacre Core sidebar background must be #15191B');
+  else pass('Nacre Core sidebar background is #15191B');
 }
 
 const mainFolderRoot = path.join(root, 'icons/build/main/folders');

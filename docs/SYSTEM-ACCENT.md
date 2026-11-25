@@ -10,21 +10,23 @@ When the active VS Code color theme is exactly **Nacre**, the extension can use 
 }
 ```
 
-The main Nacre editor canvas stays near-black (`#0B0C0E`). Existing TextMate and semantic syntax foregrounds receive a visible but restrained 20% blend toward the desktop accent. The original token roles and hierarchy remain intact, and generated foregrounds are adjusted to preserve a minimum 4.5:1 contrast ratio against the editor background.
+Nacre Core uses Graphite 950 (`#15191B`) as its editor canvas. Existing TextMate and semantic syntax foregrounds receive a visible but restrained 20% blend toward the desktop accent. The original token roles and hierarchy remain intact, and generated foregrounds are adjusted to preserve a minimum 4.5:1 contrast ratio against the editor background.
 
 ## Alternative themes are not tinted
 
-The extension contributes seven additional fixed-color themes:
+The extension contributes nine additional fixed-color themes:
 
-- Nacre / Catppuccin Mocha
-- Nacre / Everforest Dark
-- Nacre / Gruvbox Dark Medium
-- Nacre / Kanagawa Wave
-- Nacre / Material Ocean
-- Nacre / Nightfox
-- Nacre / Osaka Jade
+- Nacre Mocha
+- Nacre Grove
+- Nacre Ember
+- Nacre Tide
+- Nacre Abyss
+- Nacre Nocturne
+- Nacre Jade
+- Nacre Dusk
+- Nacre Alloy
 
-System accent synchronization checks that the active theme name is exactly `Nacre`. These seven alternatives have their own static workbench, TextMate and semantic palettes. Changing the desktop accent does not recolor them. File icons and product icons are also independent of system accent synchronization.
+System accent synchronization checks that the active theme name is exactly `Nacre`. These nine alternatives have their own static workbench, TextMate and semantic palettes. Changing the desktop accent does not recolor them. File icons and product icons are also independent of system accent synchronization.
 
 ## Accent sources
 
@@ -38,7 +40,7 @@ The portal returns normalized RGB components. GNOME returns a named accent prefe
 
 Nacre monitors the GNOME GSettings key on GNOME sessions, the portal's `SettingChanged` signal, and the KDE configuration directory when running Plasma. It does not continuously poll desktop settings.
 
-For GNOME versions that do not expose the GSettings accent key, the portal fallback may still work if the desktop portal backend implements the setting. If no supported source returns an accent, Nacre does not invent or sample a wallpaper color; it uses the static Nacre palette.
+For GNOME versions that do not expose the GSettings accent key, the portal fallback may still work if the desktop portal backend implements the setting. If no supported source returns an accent, Nacre does not invent or sample a wallpaper color; it uses the static Nacre Core palette.
 
 ## Workbench and syntax behavior
 

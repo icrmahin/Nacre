@@ -1,12 +1,19 @@
 # Changelog
 
-## 1.0.3 — Grayscale Nacre folders and flavor-matched sub-icons
+## 1.0.3 — Nacre Core design system and final icon polish
 
-- Reworked the original Nacre folder icon set to use neutral grayscale throughout, including embedded folder-type marks.
-- Lifted the original folder body from near-black to a visible medium gray for clearer contrast on Nacre's dark workbench.
-- Recolored embedded folder sub-icons in each flavor to that flavor's own accent palette; removed the leftover blue code badge.
-- Preserved all file glyphs, icon silhouettes, file/folder associations, manual icon-theme selection and product icons.
-- Kept the seven flavor text-contrast fixes and the original Nacre color theme unchanged.
+- Redesigned the original Nacre Core around its own Signal / Noise visual language: graphite surfaces, warm bone text, Signal Vermilion, brass, soft moss, sea glass and warm amber.
+- Reworked all 221 TextMate rule colors and all 35 semantic-token mappings around a deliberate language-role hierarchy; retained the existing grammar scope coverage.
+- Added the Nacre Core design-system specification and representative TypeScript, React, Dart, Python, HTML, CSS and JSON syntax fixtures.
+- Added Nacre Dusk and Nacre Alloy as independently selectable palette adaptations, each with its own manually selectable matching file icon theme.
+- Preserved the nine existing palette flavors, neutral interface text readability and manual color/icon pairing.
+- Preserved the original grayscale core folder treatment and source multicolor embedded folder sub-icons.
+- Kept desktop-accent synchronization exclusive to the exact active color theme name Nacre.
+- Kept package version at 1.0.3; this branch is for local test-build review and is not a Marketplace release.
+- Kept all flavor file glyphs byte-identical to the original Nacre files; only folder bodies receive flavor accents.
+- Preserved the source multicolor folder sub-icons instead of flattening them into a single accent color.
+- Corrected extension-view button normal, hover and prominent states to use readable neutral text and each theme's own dark hover surface.
+- Renamed the Tokyo Night and One Dark Pro flavor entries to Nacre Dusk and Nacre Alloy.
 
 ## 1.0.2 — Independent palette and icon flavors
 

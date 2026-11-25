@@ -290,9 +290,9 @@ function contrastRatio(first, second) {
 }
 
 function bestContrastForeground(background) {
-    return contrastRatio(background, '#FFFFFF') >= contrastRatio(background, '#151719')
+    return contrastRatio(background, '#FFFFFF') >= contrastRatio(background, '#15191B')
         ? '#FFFFFF'
-        : '#151719';
+        : '#15191B';
 }
 
 function rgbToHsl({ r, g, b }) {
@@ -333,7 +333,7 @@ function hslToRgb({ h, s, l }) {
 function hasAccessibleForeground(background) {
     return Math.max(
         contrastRatio(background, '#FFFFFF'),
-        contrastRatio(background, '#151719'),
+        contrastRatio(background, '#15191B'),
     ) >= 4.5;
 }
 
@@ -365,10 +365,10 @@ function buildNacreCustomizations(accentColor) {
     const accent = parseColorValue(accentColor);
     if (!accent) return {};
 
-    const editor = '#0B0C0E';
-    const surface = mixColors('#111214', accent, 0.035);
-    const raisedSurface = mixColors('#17191C', accent, 0.05);
-    const border = mixColors('#25282D', accent, 0.12);
+    const editor = '#15191B';
+    const surface = mixColors('#15191B', accent, 0.035);
+    const raisedSurface = mixColors('#22282A', accent, 0.05);
+    const border = mixColors('#353C3E', accent, 0.12);
     const uiAccent = readableAccent(accent, surface);
     const buttonAccent = readableButtonAccent(uiAccent);
     const accentSurface = mixColors(surface, uiAccent, 0.20);
@@ -473,7 +473,7 @@ function buildNacreCustomizations(accentColor) {
         'activityBarBadge.background': buttonAccent,
         'activityBarBadge.foreground': buttonForeground,
         'badge.background': accentSurface,
-        'badge.foreground': '#F4F6FB',
+        'badge.foreground': '#EAE7DF',
         'quickInputList.focusIconForeground': uiAccent,
         'list.highlightForeground': uiAccent,
         'editorSuggestWidget.highlightForeground': uiAccent,
@@ -489,7 +489,7 @@ function buildNacreCustomizations(accentColor) {
         'extensionButton.prominentForeground': buttonForeground,
         'extensionButton.prominentHoverBackground': mixColors(buttonAccent, buttonForeground, 0.12),
         'statusBarItem.remoteHoverBackground': accentSurface,
-        'statusBarItem.remoteHoverForeground': '#F4F6FB',
+        'statusBarItem.remoteHoverForeground': '#EAE7DF',
         'toolbar.hoverBackground': accentSurface,
         'toolbar.activeBackground': raisedSurface,
     };

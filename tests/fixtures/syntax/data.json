@@ -1,0 +1,12 @@
+{
+  "name": "Nacre Core",
+  "mode": "signal-noise",
+  "enabled": true,
+  "accent": "#F16B52",
+  "surfaces": ["#15191B", "#22282A", "#353C3E"],
+  "text": {
+    "primary": "#EAE7DF",
+    "secondary": "#AEB6B5",
+    "muted": "#697577"
+  }
+}
