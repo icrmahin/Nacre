@@ -413,14 +413,14 @@ test('Tokyo Night and One Dark Pro remain recognizable palette adaptations', () 
     const cases = [
         {
             path: 'themes/nacre-tokyo-night-color-theme.json',
-            label: 'Nacre Tokyo Night',
+            label: 'Nacre Dusk',
             background: '#1A1B26',
             keyword: '#BB9AF7',
             function: '#7AA2F7',
         },
         {
             path: 'themes/nacre-one-dark-pro-color-theme.json',
-            label: 'Nacre One Dark Pro',
+            label: 'Nacre Alloy',
             background: '#282C34',
             keyword: '#C678DD',
             function: '#61AFEF',
