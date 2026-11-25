@@ -117,6 +117,7 @@ if (pkg) {
   const expectedFlavorAccents = {
     mocha: '#cba6f7', grove: '#a7c080', ember: '#fe8019',
     tide: '#7e9cd8', abyss: '#80cbc4', nocturne: '#719cd6', jade: '#2dd5b7',
+    'tokyo-night': '#7aa2f7', 'one-dark': '#61afef',
   };
   for (const [slug, accent] of Object.entries(expectedFlavorAccents)) {
     const sourceBadgePath = path.join(root, 'icons/build', slug, 'folders/filled/folder_src.variant.carbon.svg');
@@ -247,9 +248,15 @@ else pass('Package version remains unchanged at 1.0.3');
 if (colorTheme) {
   if (colorTheme.name !== 'Nacre') fail('Original Nacre color theme name is not preserved');
   else pass('Original Nacre color theme name is preserved');
-  if (colorTheme.colors?.['editor.background'] !== '#0B0C0E') fail('Nacre Core editor background must be #15191B');
+  if (colorTheme.colors?.foreground !== '#EAE7DF') fail('Nacre Core foreground must use warm bone');
+  if (colorTheme.colors?.focusBorder !== '#F16B52') fail('Nacre Core must keep Signal Vermilion as its signature accent');
+  if (colorTheme.semanticTokenColors?.keyword !== '#F16B52') fail('Nacre Core keyword semantics must use Signal Vermilion');
+  if (colorTheme.semanticTokenColors?.function !== '#D7C68F') fail('Nacre Core function semantics must use brass');
+  if (colorTheme.semanticTokenColors?.comment !== '#697577') fail('Nacre Core comments must use muted graphite');
+  if (colorTheme.tokenColors?.length !== 221) fail('Nacre Core must retain all 221 TextMate rules');
+  if (colorTheme.colors?.['editor.background'] !== '#15191B') fail('Nacre Core editor background must be #15191B');
   else pass('Nacre Core editor background is #15191B');
-  if (colorTheme.colors?.['sideBar.background'] !== '#111214') fail('Nacre Core sidebar background must be #15191B');
+  if (colorTheme.colors?.['sideBar.background'] !== '#15191B') fail('Nacre Core sidebar background must be #15191B');
   else pass('Nacre Core sidebar background is #15191B');
 }
 
