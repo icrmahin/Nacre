@@ -7,7 +7,7 @@
       "name": "Global settings",
       "settings": {
         "background": "#282C34",
-        "foreground": "#E6E9EF"
+        "foreground": "#ABB2BF"
       }
     },
     {
@@ -49,7 +49,7 @@
       "name": "Variable",
       "scope": "variable, variable.parameter, support.variable, variable.language, support.constant, meta.definition.variable entity.name.function, meta.function-call.arguments",
       "settings": {
-        "foreground": "#D19A66"
+        "foreground": "#ABB2BF"
       }
     },
     {
@@ -63,7 +63,7 @@
       "name": "Keyword",
       "scope": "keyword, modifier, variable.language.this, support.type.object, constant.language",
       "settings": {
-        "foreground": "#E5C07B"
+        "foreground": "#C678DD"
       }
     },
     {
@@ -419,7 +419,7 @@
       "name": "C# type",
       "scope": "source.cs storage.type",
       "settings": {
-        "foreground": "#C678DD"
+        "foreground": "#E5C07B"
       }
     },
     {
@@ -661,14 +661,14 @@
       "name": "Java - Type",
       "scope": "storage.type.java, storage.type.primitive.java, storage.type.generic.java",
       "settings": {
-        "foreground": "#C678DD"
+        "foreground": "#E5C07B"
       }
     },
     {
       "name": "Java - Object Array Type",
       "scope": "storage.type.object.array.java",
       "settings": {
-        "foreground": "#C678DD"
+        "foreground": "#E5C07B"
       }
     },
     {
@@ -710,7 +710,7 @@
       "name": "Rust - Lifetime",
       "scope": "storage.modifier.lifetime.rust, entity.name.type.lifetime.rust, punctuation.definition.lifetime.rust",
       "settings": {
-        "foreground": "#E5C07B"
+        "foreground": "#C678DD"
       }
     },
     {
@@ -843,7 +843,7 @@
       "name": "SQL - Type",
       "scope": "storage.type.sql",
       "settings": {
-        "foreground": "#C678DD"
+        "foreground": "#E5C07B"
       }
     },
     {
@@ -1207,7 +1207,7 @@
       "name": "Gitignore - Pattern",
       "scope": "constant.language.gitignore, keyword.operator.negation.gitignore",
       "settings": {
-        "foreground": "#D19A66"
+        "foreground": "#C678DD"
       }
     },
     {
@@ -1411,7 +1411,7 @@
       "name": "PHP - Doc Tag",
       "scope": "keyword.other.phpdoc.php, storage.type.class.phpdoc.php",
       "settings": {
-        "foreground": "#E5C07B"
+        "foreground": "#C678DD"
       }
     },
     {
@@ -1537,7 +1537,7 @@
       "name": "Firestore Rules - Permission Keywords",
       "scope": "support.type.firestorerules, keyword.other.permission.firestorerules",
       "settings": {
-        "foreground": "#E5C07B"
+        "foreground": "#C678DD"
       }
     },
     {
