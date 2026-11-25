@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
+      - main
       - feat/nacre-system-accent-darkness
       - feat/nacre-accent-adaptive-syntax
       - feat/nacre-standalone-theme-collection
