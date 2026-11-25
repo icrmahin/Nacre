@@ -16,6 +16,8 @@ const flavors = [
   { slug: 'abyss', short: 'Abyss', accent: '#80CBC4' },
   { slug: 'nocturne', short: 'Nocturne', accent: '#719CD6' },
   { slug: 'jade', short: 'Jade', accent: '#2DD5B7' },
+  { slug: 'tokyo-night', short: 'Tokyo', accent: '#7AA2F7' },
+  { slug: 'one-dark', short: 'One Dark', accent: '#61AFEF' },
 ];
 
 function readJson(filePath) {
