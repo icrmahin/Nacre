@@ -21,7 +21,7 @@ node --check systemAccent.js
 node --check syntaxAccent.js
 ```
 
-npm run build:icons generates the neutral Nacre folder artwork and nine flavor-specific file icon sets from the shared SVG sources. Validation checks the ten color theme registrations, ten independently selectable file icon contributions, all generated SVG paths, Nacre Core palette roles and token coverage, neutral grayscale across every original Nacre folder SVG, flavor-colored embedded folder sub-icons, product-icon font references, and the rule that desktop-accent synchronization belongs only to the original Nacre theme. The prevalidate and pretest npm hooks run the icon generator automatically. Unit tests cover GNOME/KDE detection, accent parsing, workbench palette generation, syntax tinting, contrast, restoration and variant isolation.
+npm run build:icons generates the neutral Nacre folder artwork and nine flavor-specific folder-accent icon sets from the shared SVG sources. Validation checks the ten color theme registrations, ten independently selectable file icon contributions, all generated SVG paths, Nacre Core palette roles and token coverage, neutral grayscale across every original Nacre folder SVG, untouched flavor file glyphs and folder-body-only accent transforms, original multicolor embedded folder sub-icons, product-icon font references, and the rule that desktop-accent synchronization belongs only to the original Nacre theme. The prevalidate and pretest npm hooks run the icon generator automatically. Unit tests cover GNOME/KDE detection, accent parsing, workbench palette generation, syntax tinting, contrast, restoration and variant isolation.
 
 ## Build a local VSIX
 
