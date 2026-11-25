@@ -32,15 +32,15 @@ const collectSvgPaths = relativeRoot => {
   return output.sort();
 };
 
-const accentFolderBodySvg = (svg, accent) => svg.replace(/<path\\b[^>]*>/i, pathTag => pathTag.replace(
-  /(\\b(?:fill|stroke)\\s*=\\s*)(["'])(#[0-9a-f]{3,8})\\2/gi,
+const accentFolderBodySvg = (svg, accent) => svg.replace(/<path\b[^>]*>/i, pathTag => pathTag.replace(
+  /(\b(?:fill|stroke)\s*=\s*)(["'])(#[0-9a-f]{3,8})\2/gi,
   (match, prefix, quote) => prefix + quote + accent + quote,
 ));
 
 const expectedThemeLabels = [
   'Nacre', 'Nacre Mocha', 'Nacre Grove', 'Nacre Ember',
   'Nacre Tide', 'Nacre Abyss', 'Nacre Nocturne', 'Nacre Jade',
-  'Nacre Tokyo Night', 'Nacre One Dark Pro',
+  'Nacre Dusk', 'Nacre Alloy',
 ];
 const expectedIconThemes = [
   { id: 'nacre-file-icons', label: 'Nacre File Icons', path: './themes/nacre-main-file-icons.json', slug: 'main' },
@@ -51,8 +51,8 @@ const expectedIconThemes = [
   { id: 'nacre-abyss-icons', label: 'Nacre Abyss Icons', path: './themes/nacre-abyss-file-icons.json', slug: 'abyss' },
   { id: 'nacre-nocturne-icons', label: 'Nacre Nocturne Icons', path: './themes/nacre-nocturne-file-icons.json', slug: 'nocturne' },
   { id: 'nacre-jade-icons', label: 'Nacre Jade Icons', path: './themes/nacre-jade-file-icons.json', slug: 'jade' },
-  { id: 'nacre-tokyo-night-icons', label: 'Nacre Tokyo Icons', path: './themes/nacre-tokyo-night-file-icons.json', slug: 'tokyo-night' },
-  { id: 'nacre-one-dark-icons', label: 'Nacre One Dark Icons', path: './themes/nacre-one-dark-file-icons.json', slug: 'one-dark' },
+  { id: 'nacre-tokyo-night-icons', label: 'Nacre Dusk Icons', path: './themes/nacre-tokyo-night-file-icons.json', slug: 'tokyo-night' },
+  { id: 'nacre-one-dark-icons', label: 'Nacre Alloy Icons', path: './themes/nacre-one-dark-file-icons.json', slug: 'one-dark' },
 ];
 
 const pkg = readJson('package.json');
