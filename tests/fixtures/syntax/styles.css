@@ -1,0 +1,14 @@
+.theme-preview {
+  color: #EAE7DF;
+  background: #15191B;
+  border: 1px solid #353C3E;
+}
+
+.theme-preview__signal {
+  color: #F16B52;
+  transition: color 160ms ease;
+}
+
+.theme-preview:hover {
+  background: #22282A;
+}
