@@ -11,6 +11,7 @@ const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'))
 const expectedLabels = [
     'Nacre', 'Nacre Mocha', 'Nacre Grove', 'Nacre Ember',
     'Nacre Tide', 'Nacre Abyss', 'Nacre Nocturne', 'Nacre Jade',
+    'Nacre Tokyo Night', 'Nacre One Dark Pro',
 ];
 const expectedIconThemes = [
     ['nacre-file-icons', 'Nacre File Icons', 'main'],
@@ -21,6 +22,8 @@ const expectedIconThemes = [
     ['nacre-abyss-icons', 'Nacre Abyss Icons', 'abyss'],
     ['nacre-nocturne-icons', 'Nacre Nocturne Icons', 'nocturne'],
     ['nacre-jade-icons', 'Nacre Jade Icons', 'jade'],
+    ['nacre-tokyo-night-icons', 'Nacre Tokyo Icons', 'tokyo-night'],
+    ['nacre-one-dark-icons', 'Nacre One Dark Icons', 'one-dark'],
 ];
 
 test('registers Nacre and seven approved flavor names without slash separators', () => {
@@ -45,7 +48,7 @@ test('each registered color theme has an independent valid dark theme file', () 
 });
 
 
-test('all seven flavor themes use one neutral white for normal UI and editor text', () => {
+test('all nine flavor themes use one neutral white for normal UI and editor text', () => {
     const textKeys = [
         'foreground',
         'disabledForeground',
@@ -128,7 +131,7 @@ test('selected text foregrounds never reuse the corresponding selection backgrou
     }
 });
 
-test('all eight color themes use distinct editor backgrounds', () => {
+test('all ten color themes use distinct editor backgrounds', () => {
     const backgrounds = pkg.contributes.themes.map(contribution => {
         const theme = JSON.parse(fs.readFileSync(
             path.join(root, contribution.path.replace(/^\.\//, '')),
@@ -224,6 +227,7 @@ test('each flavor applies its accent to folder bodies and embedded sub-icons', (
     const flavors = {
         mocha: '#cba6f7', grove: '#a7c080', ember: '#fe8019',
         tide: '#7e9cd8', abyss: '#80cbc4', nocturne: '#719cd6', jade: '#2dd5b7',
+        'tokyo-night': '#7aa2f7', 'one-dark': '#61afef',
     };
     const mix = (hexA, hexB, amount) => {
         const a = [1, 3, 5].map(index => parseInt(hexA.slice(index, index + 2), 16));
@@ -279,8 +283,14 @@ test('each flavor uses its accent across generated file glyphs', () => {
 test('original Nacre editor, sidebar and main theme identity remain unchanged', () => {
     const theme = JSON.parse(fs.readFileSync(path.join(root, 'themes/nacre-color-theme.json'), 'utf8'));
     assert.equal(theme.name, 'Nacre');
-    assert.equal(theme.colors['editor.background'], '#0B0C0E');
-    assert.equal(theme.colors['sideBar.background'], '#111214');
+    assert.equal(theme.colors['editor.background'], '#15191B');
+    assert.equal(theme.colors['sideBar.background'], '#15191B');
+    assert.equal(theme.colors.foreground, '#EAE7DF');
+    assert.equal(theme.colors.focusBorder, '#F16B52');
+    assert.equal(theme.semanticTokenColors.keyword, '#F16B52');
+    assert.equal(theme.semanticTokenColors.function, '#D7C68F');
+    assert.equal(theme.semanticTokenColors.comment, '#697577');
+    assert.ok(theme.tokenColors.length >= 220);
 });
 
 test('desktop accent remains isolated to Nacre and icon theme selection stays manual', () => {
