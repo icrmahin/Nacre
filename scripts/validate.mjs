@@ -19,6 +19,7 @@ const exists = relativePath => fs.existsSync(path.join(root, relativePath));
 const expectedThemeLabels = [
   'Nacre', 'Nacre Mocha', 'Nacre Grove', 'Nacre Ember',
   'Nacre Tide', 'Nacre Abyss', 'Nacre Nocturne', 'Nacre Jade',
+  'Nacre Tokyo Night', 'Nacre One Dark Pro',
 ];
 const expectedIconThemes = [
   { id: 'nacre-file-icons', label: 'Nacre File Icons', path: './themes/nacre-main-file-icons.json', slug: 'main' },
@@ -29,6 +30,8 @@ const expectedIconThemes = [
   { id: 'nacre-abyss-icons', label: 'Nacre Abyss Icons', path: './themes/nacre-abyss-file-icons.json', slug: 'abyss' },
   { id: 'nacre-nocturne-icons', label: 'Nacre Nocturne Icons', path: './themes/nacre-nocturne-file-icons.json', slug: 'nocturne' },
   { id: 'nacre-jade-icons', label: 'Nacre Jade Icons', path: './themes/nacre-jade-file-icons.json', slug: 'jade' },
+  { id: 'nacre-tokyo-night-icons', label: 'Nacre Tokyo Icons', path: './themes/nacre-tokyo-night-file-icons.json', slug: 'tokyo-night' },
+  { id: 'nacre-one-dark-icons', label: 'Nacre One Dark Icons', path: './themes/nacre-one-dark-file-icons.json', slug: 'one-dark' },
 ];
 
 const pkg = readJson('package.json');
@@ -45,7 +48,7 @@ if (pkg) {
   const actualLabels = themes.map(theme => theme.label);
   if (JSON.stringify(actualLabels) !== JSON.stringify(expectedThemeLabels)) {
     fail('Color themes are not registered in the expected order: ' + actualLabels.join(', '));
-  } else pass('All eight color themes use the approved names and order');
+  } else pass('All ten color themes use the approved names and order');
   if (new Set(actualLabels).size !== actualLabels.length) fail('Color theme labels must be unique');
   else pass('Color theme labels are unique');
 
@@ -109,7 +112,7 @@ if (pkg) {
       }
     }
   }
-  pass('All seven flavor themes use one neutral text color with readable selection states');
+  pass('All nine flavor themes use one neutral text color with readable selection states');
 
   const expectedFlavorAccents = {
     mocha: '#cba6f7', grove: '#a7c080', ember: '#fe8019',
@@ -133,7 +136,7 @@ if (pkg) {
       fail(slug + ': source blue or uncolored gray remains in the flavor src sub-icon');
     }
   }
-  pass('All seven flavor src folder sub-icons use their matching accent palette');
+  pass('All nine flavor src folder sub-icons use their matching accent palette');
 
 
   const iconThemes = pkg.contributes?.iconThemes ?? [];
@@ -141,7 +144,7 @@ if (pkg) {
   const expectedShape = expectedIconThemes.map(({ id, label, path }) => ({ id, label, path }));
   if (JSON.stringify(actualShape) !== JSON.stringify(expectedShape)) {
     fail('File icon themes are not registered in the expected order and paths');
-  } else pass('Eight file icon themes are registered for manual selection');
+  } else pass('Ten file icon themes are registered for manual selection');
 
   for (const entry of iconThemes) {
     const relative = entry.path?.replace(/^\.\//, '');
@@ -180,6 +183,7 @@ if (pkg) {
   const expectedAccents = {
     mocha: '#cba6f7', grove: '#a7c080', ember: '#fe8019',
     tide: '#7e9cd8', abyss: '#80cbc4', nocturne: '#719cd6', jade: '#2dd5b7',
+    'tokyo-night': '#7aa2f7', 'one-dark': '#61afef',
   };
   for (const [slug, accent] of Object.entries(expectedAccents)) {
     const fileRoot = path.join(root, 'icons/build', slug, 'files');
@@ -236,13 +240,17 @@ if (productIcons) {
 }
 
 const colorTheme = readJson('themes/nacre-color-theme.json');
+
+if (pkg?.version !== '1.0.3') fail('The approved package version must remain exactly 1.0.3');
+else pass('Package version remains unchanged at 1.0.3');
+
 if (colorTheme) {
   if (colorTheme.name !== 'Nacre') fail('Original Nacre color theme name is not preserved');
   else pass('Original Nacre color theme name is preserved');
-  if (colorTheme.colors?.['editor.background'] !== '#0B0C0E') fail('Original Nacre editor background must remain #0B0C0E');
-  else pass('Original Nacre editor background is preserved');
-  if (colorTheme.colors?.['sideBar.background'] !== '#111214') fail('Original Nacre sidebar background must remain #111214');
-  else pass('Original Nacre sidebar background is preserved');
+  if (colorTheme.colors?.['editor.background'] !== '#0B0C0E') fail('Nacre Core editor background must be #15191B');
+  else pass('Nacre Core editor background is #15191B');
+  if (colorTheme.colors?.['sideBar.background'] !== '#111214') fail('Nacre Core sidebar background must be #15191B');
+  else pass('Nacre Core sidebar background is #15191B');
 }
 
 const mainFolderRoot = path.join(root, 'icons/build/main/folders');
