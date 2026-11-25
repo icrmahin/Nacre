@@ -5,9 +5,9 @@
 - Redesigned the original Nacre Core around its own Signal / Noise visual language: graphite surfaces, warm bone text, Signal Vermilion, brass, soft moss, sea glass and warm amber.
 - Reworked all 221 TextMate rule colors and all 35 semantic-token mappings around a deliberate language-role hierarchy; retained the existing grammar scope coverage.
 - Added the Nacre Core design-system specification and representative TypeScript, React, Dart, Python, HTML, CSS and JSON syntax fixtures.
-- Added Nacre Tokyo Night and Nacre One Dark Pro as independently selectable palette adaptations, each with its own manually selectable matching file icon theme.
+- Added Nacre Dusk and Nacre Alloy as independently selectable palette adaptations, each with its own manually selectable matching file icon theme.
 - Preserved the nine existing palette flavors, neutral interface text readability and manual color/icon pairing.
-- Preserved the original grayscale folder treatment and flavor-matched embedded folder sub-icons.
+- Preserved the original grayscale core folder treatment and source multicolor embedded folder sub-icons.
 - Kept desktop-accent synchronization exclusive to the exact active color theme name Nacre.
 - Kept package version at 1.0.3; this branch is for local test-build review and is not a Marketplace release.
 - Kept all flavor file glyphs byte-identical to the original Nacre files; only folder bodies receive flavor accents.
