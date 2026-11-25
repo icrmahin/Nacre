@@ -15,6 +15,10 @@ export class NacrePalette {
     }
 }
 
+export function resolveSignalAccent(active: boolean, fallback = "#697577"): string {
+    return active ? "#F16B52" : fallback;
+}
+
 export const signalAccent = "#F16B52";
 export const contrastRatio = (foreground: number, background: number): number =>
     Math.max(foreground, background) / Math.min(foreground, background);
