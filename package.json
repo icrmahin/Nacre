@@ -1,7 +1,7 @@
 {
   "name": "nacre",
   "displayName": "Nacre — Dark Theme Collection",
-  "description": "Nacre is a premium dark VS Code theme collection with seven independent palette flavors and manually selectable matching file icon themes, neutral grayscale folders in the original theme, and optional desktop-accent tinting for Nacre.",
+  "description": "Nacre is a dark VS Code theme with an original Signal / Noise core design, nine independently selectable palette flavors, matching manual file icon themes, and optional desktop-accent tinting for Nacre Core.",
   "version": "1.0.3",
   "publisher": "icrmahin",
   "author": "ICRMAHIN",
@@ -37,7 +37,11 @@
     "material theme",
     "nightfox",
     "osaka jade",
-    "color theme pack"
+    "color theme pack",
+    "tokyo night",
+    "one dark pro",
+    "signal noise",
+    "original syntax palette"
   ],
   "contributes": {
     "themes": [
@@ -80,6 +84,16 @@
         "label": "Nacre Jade",
         "uiTheme": "vs-dark",
         "path": "./themes/nacre-osaka-jade-color-theme.json"
+      },
+      {
+        "label": "Nacre Tokyo Night",
+        "uiTheme": "vs-dark",
+        "path": "./themes/nacre-tokyo-night-color-theme.json"
+      },
+      {
+        "label": "Nacre One Dark Pro",
+        "uiTheme": "vs-dark",
+        "path": "./themes/nacre-one-dark-pro-color-theme.json"
       }
     ],
     "iconThemes": [
@@ -122,6 +136,16 @@
         "id": "nacre-jade-icons",
         "label": "Nacre Jade Icons",
         "path": "./themes/nacre-jade-file-icons.json"
+      },
+      {
+        "id": "nacre-tokyo-night-icons",
+        "label": "Nacre Tokyo Icons",
+        "path": "./themes/nacre-tokyo-night-file-icons.json"
+      },
+      {
+        "id": "nacre-one-dark-icons",
+        "label": "Nacre One Dark Icons",
+        "path": "./themes/nacre-one-dark-file-icons.json"
       }
     ],
     "productIconThemes": [
@@ -142,7 +166,7 @@
         "nacre.systemAccent.enable": {
           "type": "boolean",
           "default": true,
-          "description": "Automatically tint workbench and syntax colors only when the main Nacre theme is active. The seven alternative palette themes keep their own fixed colors. Syntax colors use a visible but restrained 20% blend. Disable to restore the original Nacre palette."
+          "description": "Automatically tint Nacre Core workbench and syntax colors only when the active color theme is exactly Nacre. All nine alternative palette flavors keep their own fixed colors. Syntax colors use a restrained 20% blend. Disable to restore the static Nacre Core palette."
         }
       }
     }
