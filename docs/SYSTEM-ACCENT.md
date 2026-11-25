@@ -23,8 +23,8 @@ The extension contributes nine additional fixed-color themes:
 - Nacre Abyss
 - Nacre Nocturne
 - Nacre Jade
-- Nacre Tokyo Night
-- Nacre One Dark Pro
+- Nacre Dusk
+- Nacre Alloy
 
 System accent synchronization checks that the active theme name is exactly `Nacre`. These nine alternatives have their own static workbench, TextMate and semantic palettes. Changing the desktop accent does not recolor them. File icons and product icons are also independent of system accent synchronization.
 
