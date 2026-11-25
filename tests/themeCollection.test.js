@@ -281,13 +281,13 @@ test('flavor folders accent only their body paths and preserve multicolor sub-ic
             'utf8',
         ).toLowerCase();
         assert.ok(apiBadge.includes(accent.toLowerCase()), slug + ' API folder body is not accented');
-        assert.ok(apiBadge.includes('#aee33e'), slug + ' lost the API folder's green sub-icon');
+        assert.ok(apiBadge.includes('#aee33e'), slug + " lost the API folder's green sub-icon");
 
         const claudeBadge = fs.readFileSync(
             path.join(outputRoot, 'filled/folder_claude.variant.carbon.svg'),
             'utf8',
         ).toLowerCase();
-        assert.ok(claudeBadge.includes('#f78c6c'), slug + ' lost the Claude folder's original sub-icon color');
+        assert.ok(claudeBadge.includes('#f78c6c'), slug + " lost the Claude folder's original sub-icon color");
     }
 });
 
