@@ -10,6 +10,10 @@
 - Preserved the original grayscale folder treatment and flavor-matched embedded folder sub-icons.
 - Kept desktop-accent synchronization exclusive to the exact active color theme name Nacre.
 - Kept package version at 1.0.3; this branch is for local test-build review and is not a Marketplace release.
+- Kept all flavor file glyphs byte-identical to the original Nacre files; only folder bodies receive flavor accents.
+- Preserved the source multicolor folder sub-icons instead of flattening them into a single accent color.
+- Corrected extension-view button normal, hover and prominent states to use readable neutral text and each theme's own dark hover surface.
+- Renamed the Tokyo Night and One Dark Pro flavor entries to Nacre Dusk and Nacre Alloy.
 
 ## 1.0.2 — Independent palette and icon flavors
 
