@@ -49,8 +49,8 @@ Choose a color theme with **Preferences: Color Theme** in the VS Code Command Pa
 | **Nacre Abyss** | Material Ocean |
 | **Nacre Nocturne** | Nightfox |
 | **Nacre Jade** | Osaka Jade |
-| **Nacre Tokyo Night** | Tokyo Night |
-| **Nacre One Dark Pro** | One Dark Pro |
+| **Nacre Dusk** | Tokyo Night |
+| **Nacre Alloy** | One Dark Pro |
 
 Nacre Core is the authored identity. The nine flavors are separate palette adaptations for people who prefer familiar color families. They reuse Nacre's scope coverage and do not bundle upstream extension implementation code, artwork or fonts. See [third-party palette credits](THIRD-PARTY-THEMES.md).
 
@@ -70,8 +70,8 @@ Every color theme has a separately selectable file icon theme:
 | **Nacre Abyss** | Nacre Abyss Icons |
 | **Nacre Nocturne** | Nacre Nocturne Icons |
 | **Nacre Jade** | Nacre Jade Icons |
-| **Nacre Tokyo Night** | Nacre Tokyo Icons |
-| **Nacre One Dark Pro** | Nacre One Dark Icons |
+| **Nacre Dusk** | Nacre Dusk Icons |
+| **Nacre Alloy** | Nacre Alloy Icons |
 
 **Pair them manually.** Color themes and file icon themes are independent VS Code settings. Selecting a color theme never changes the selected file icon theme.
 
@@ -80,7 +80,7 @@ To pair them, open the Command Palette:
 1. **Preferences: Color Theme** → choose a Nacre theme
 2. **Preferences: File Icon Theme** → choose its matching Nacre icon theme
 
-The original Nacre folder set is neutral grayscale. Flavor file icon themes recolor file glyphs, folder bodies and embedded folder marks with the corresponding flavor accent. File associations and icon silhouettes stay consistent.
+The original Nacre folder set is neutral grayscale. Flavor file icon themes leave all file glyphs unchanged. They apply the flavor accent only to the folder body; the embedded folder sub-icons retain their original multicolor artwork. File associations and icon silhouettes stay consistent.
 
 ## Product icons
 
