@@ -6,7 +6,7 @@ const TINT_RATIO = 0.20;
 
 const TEXT_MATE_RULE_MARKER = '__nacreSystemAccentTint__:';
 const MIN_EDITOR_CONTRAST = 4.5;
-const EDITOR_BACKGROUND = '#0B0C0E';
+const EDITOR_BACKGROUND = '#15191B';
 
 function normalizeHex(value) {
     if (typeof value !== 'string') return null;
