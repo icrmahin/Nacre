@@ -108,10 +108,10 @@ The following themes are fixed palette adaptations, not Nacre Core syntax varian
 - Nacre Abyss — Material Ocean
 - Nacre Nocturne — Nightfox
 - Nacre Jade — Osaka Jade
-- Nacre Tokyo Night — Tokyo Night
-- Nacre One Dark Pro — One Dark Pro
+- Nacre Dusk — Tokyo Night
+- Nacre Alloy — One Dark Pro
 
-Flavor UI foregrounds retain the shared neutral \`#E6E9EF\` text treatment for normal interface and editor text. Their syntax accents remain specific to each flavor. Each flavor has a separately selectable matching file icon theme.
+Flavor UI foregrounds retain the shared neutral \`#E6E9EF\` text treatment for normal interface and editor text. Their syntax accents remain specific to each flavor. Each flavor has a separately selectable matching file icon theme. Flavor file glyphs remain unchanged; only the folder body takes the flavor accent, while embedded folder sub-icons retain their original multicolor artwork.
 
 The palette inspirations are attributed in [THIRD-PARTY-THEMES.md](../THIRD-PARTY-THEMES.md). Nacre does not bundle upstream theme implementation code, SVG artwork, fonts or source extension assets.
 
