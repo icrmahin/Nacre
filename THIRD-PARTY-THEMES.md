@@ -1,6 +1,6 @@
 # Third-party palette credits and license notices
 
-The seven additional color themes are independent Nacre adaptations. They reuse Nacre's existing TextMate and semantic scope coverage and apply palette colors inspired by the projects below. They do not bundle upstream extension implementation code, artwork, icons or fonts.
+The original Nacre Core is an independently authored Signal / Noise design system. The nine additional color themes are separate palette adaptations. They reuse Nacre's TextMate and semantic scope coverage and apply palette colors inspired by the projects below. They do not bundle upstream extension implementation code, artwork, icons or fonts.
 
 The following upstream sources were checked on 25 November 2026. Each listed source uses the MIT License. The copyright and permission notices below are preserved here for attribution. The original repositories remain the authoritative source for their license files.
 
