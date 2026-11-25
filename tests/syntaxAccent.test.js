@@ -80,14 +80,15 @@ test('changes the same syntax roles between different desktop accents', () => {
     const tealStorage = teal.textMateRules.find(rule => rule.name === storageName).settings.foreground;
     const burgundyStorage = burgundy.textMateRules.find(rule => rule.name === storageName).settings.foreground;
 
-    assert.equal(tealStorage, '#DB7F79');
-    assert.equal(burgundyStorage, '#E56E6C');
+    const sourceStorageColor = theme.tokenColors[storageIndex].settings.foreground;
+    assert.equal(tealStorage, tintHexColor(sourceStorageColor, '#4C8F94'));
+    assert.equal(burgundyStorage, tintHexColor(sourceStorageColor, '#7E3B52'));
     assert.notEqual(tealStorage, burgundyStorage);
     assert.notEqual(teal.semanticRules.keyword.foreground, burgundy.semanticRules.keyword.foreground);
     assert.notEqual(teal.semanticRules.function.foreground, burgundy.semanticRules.function.foreground);
 });
 
-test('keeps tinted syntax colors comfortably readable on Nacre near-black', () => {
+test('keeps tinted syntax colors comfortably readable on Nacre Core graphite', () => {
     for (const accent of ['#000000', '#3584E4', '#F16B52', '#FFFF00', '#FFFFFF']) {
         const generated = buildNacreSyntaxCustomizations(theme, accent);
         const colors = [
@@ -97,7 +98,7 @@ test('keeps tinted syntax colors comfortably readable on Nacre near-black', () =
         assert.ok(colors.length > 150);
         for (const color of new Set(colors)) {
             assert.ok(
-                contrast(color, '#0B0C0E') >= 4.5,
+                contrast(color, '#15191B') >= 4.5,
                 `${color} fell below 4.5:1 contrast for accent ${accent}`,
             );
         }
