@@ -26,10 +26,10 @@ const expectedIconThemes = [
     ['nacre-one-dark-icons', 'Nacre One Dark Icons', 'one-dark'],
 ];
 
-test('registers Nacre and seven approved flavor names without slash separators', () => {
+test('registers Nacre and nine approved flavor names without slash separators', () => {
     const themes = pkg.contributes.themes;
     assert.deepEqual(themes.map(theme => theme.label), expectedLabels);
-    assert.equal(new Set(themes.map(theme => theme.label)).size, 8);
+    assert.equal(new Set(themes.map(theme => theme.label)).size, 10);
     assert.ok(themes.every(theme => !theme.label.includes('/')));
 });
 
@@ -227,6 +227,7 @@ test('each flavor applies its accent to folder bodies and embedded sub-icons', (
     const flavors = {
         mocha: '#cba6f7', grove: '#a7c080', ember: '#fe8019',
         tide: '#7e9cd8', abyss: '#80cbc4', nocturne: '#719cd6', jade: '#2dd5b7',
+        'tokyo-night': '#7aa2f7', 'one-dark': '#61afef',
         'tokyo-night': '#7aa2f7', 'one-dark': '#61afef',
     };
     const mix = (hexA, hexB, amount) => {
